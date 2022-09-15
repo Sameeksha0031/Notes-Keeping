@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "708997053047",
+    "project_id": "noteskeeping-a3ed9",
+    "storage_bucket": "noteskeeping-a3ed9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708997053047:android:e1024dbb0328bc01c3e472",
+        "android_client_info": {
+          "package_name": "com.example.noteskeeping"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "708997053047-r1ikoninh48advb2g2o6rf2j45r5gfkc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRrtzHAgisCfgMlui5YxEc85_55z5e5Cs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "708997053047-r1ikoninh48advb2g2o6rf2j45r5gfkc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
