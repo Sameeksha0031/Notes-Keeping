@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ligthblue_200"
+    android:background="@drawable/background"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".SignInFragment">
+    tools:context=".SignUpFragment">
 
     <TextView
         android:layout_width="wrap_content"

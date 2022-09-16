@@ -1,6 +1,7 @@
 package com.example.noteskeeping
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -14,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.combine
 import java.util.regex.Pattern
 
-class SignInFragment : Fragment() {
+class SignUpFragment : Fragment() {
     lateinit var binding: FragmentSignInBinding
     lateinit var auth: FirebaseAuth
     override fun onCreateView(
@@ -30,6 +31,7 @@ class SignInFragment : Fragment() {
         binding = FragmentSignInBinding.bind(view)
         auth = FirebaseAuth.getInstance()
         binding.btnBack.setOnClickListener {
+            auth.signOut()
             var fragment = LogInFragment()
             fragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, fragment)?.commit()
         }
@@ -63,23 +65,35 @@ class SignInFragment : Fragment() {
             binding.editNumberPasswordFrg.requestFocus()
             return
         }
-        auth.createUserWithEmailAndPassword(
+        auth!!.createUserWithEmailAndPassword(
             binding.editEmailAddressFrg.text.toString(),
             binding.editNumberPasswordFrg.text.toString()
         ).addOnCompleteListener(requireActivity()) { task ->
             if (task.isSuccessful) {
-                //val user  = auth.currentUser
-                //user?.sendEmailVerification()?.addOnCompleteListener{ task->
-                   // if(task.isSuccessful){
-                        var fragment = LogInFragment()
-                        fragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer,fragment)?.commit()
-                    //}
-                //}
+                //checkEmail()
             } else {
-                Log.w(TAG, "CreateUserWithEmail : Failure", task.exception)
                 Toast.makeText(context, "Authentication Failed", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun checkEmail(){
+        val user = auth?.currentUser
+        user?.sendEmailVerification()?.addOnCompleteListener{ task->
+            if(task.isSuccessful){
+                Toast.makeText(context,"Verification email is send",Toast.LENGTH_SHORT).show()
+                auth.signOut()
+                var fragment = LogInFragment()
+                fragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, fragment)?.commit()
+            }
+            else{
+                Toast.makeText(context,"Error Occurred",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun startActivityForResult(intent: Intent?, requestCode: Int) {
+        super.startActivityForResult(intent, requestCode)
     }
 
 }
