@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "708997053047-rv5b0c6li4192d7qd8hffags9bnd2a5u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.noteskeeping",
+            "certificate_hash": "1b55fdcf7c5cec6bc3a35af731c9a1604d410708"
+          }
+        },
+        {
           "client_id": "708997053047-r1ikoninh48advb2g2o6rf2j45r5gfkc.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "708997053047-r1ikoninh48advb2g2o6rf2j45r5gfkc.apps.googleusercontent.com",
+              "client_id": "708997053047-ntfa4joeenl0mrsvr6dhrjuu6r8ao707.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -38,7 +38,6 @@
             android:layout_height="44dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/custom_textview"
-            android:drawableStart="@drawable/ic_sharp_perm_identity_24"
             android:ems="10"
             android:hint="UserName"
             android:inputType="textPersonName"
@@ -100,10 +99,11 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.518" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/sign_in_btnsign"
             android:layout_width="127dp"
             android:layout_height="51dp"
+            app:backgroundTint="@null"
             android:background="@drawable/custom_button"
             android:text="Sign In"
             app:layout_constraintBottom_toBottomOf="parent"

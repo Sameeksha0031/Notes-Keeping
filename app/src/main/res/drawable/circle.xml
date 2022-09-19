@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+ <item >
+  <layer-list>
+   <item>
+    <shape android:shape="oval">
+     <solid android:color="#3fff"/>
+     <corners android:radius="100dp"/>
+     <size android:height="80dp"
+      android:width="90dp"></size>
+    </shape>
+   </item>
+   <item android:drawable="@drawable/ic_sharp_perm_identity_24"
+       android:gravity="center"
+       android:width="70dp"
+       android:height="70dp" />
+  </layer-list>
+ </item>
+</selector>
