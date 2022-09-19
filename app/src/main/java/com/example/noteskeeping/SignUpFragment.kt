@@ -1,78 +1,84 @@
 package com.example.noteskeeping
 
-import android.content.ContentValues.TAG
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.noteskeeping.databinding.FragmentSignInBinding
+import androidx.fragment.app.Fragment
+import com.example.noteskeeping.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.flow.combine
-import java.util.regex.Pattern
+
+
+
 
 class SignUpFragment : Fragment() {
-    lateinit var binding: FragmentSignInBinding
+    lateinit var binding: FragmentSignUpBinding
     lateinit var auth: FirebaseAuth
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_in, container, false)
+        return inflater.inflate(R.layout.fragment_sign_up, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentSignInBinding.bind(view)
+        binding = FragmentSignUpBinding.bind(view)
         auth = FirebaseAuth.getInstance()
+
         binding.btnBack.setOnClickListener {
             auth.signOut()
             var fragment = LogInFragment()
             fragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, fragment)?.commit()
         }
-        binding.btnLogin.setOnClickListener {
+        binding.signInBtnsign.setOnClickListener {
             signUpUser()
-            /*var fragment = LogInFragment()
-            fragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, fragment)?.commit()*/
         }
     }
 
     private fun signUpUser() {
-        if (binding.editEmailAddressFrg.text.isEmpty()) {
-            binding.editEmailAddressFrg.error = "Please enter the Email Address"
-            binding.editEmailAddressFrg.requestFocus()
+        if (binding.signEditUsername.text.isEmpty()) {
+            binding.signEditUsername.error = "Please enter the User Name"
+            binding.signEditUsername.requestFocus()
             return
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(binding.editEmailAddressFrg.text.toString())
+        if (binding.signInEditEmail.text.isEmpty()) {
+            binding.signInEditEmail.error = "Please enter the Email Address"
+            binding.signInEditEmail.requestFocus()
+            return
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(binding.signInEditEmail.text.toString())
                 .matches()
         ) {
-            binding.editEmailAddressFrg.error = "Please enter valid Email Address"
-            binding.editEmailAddressFrg.requestFocus()
+            binding.signInEditEmail.error = "Please enter valid Email Address"
+            binding.signInEditEmail.requestFocus()
             return
         }
-        if(binding.editTextUserName.text.isEmpty()){
-            binding.editTextUserName.error = "Please enter User Name"
-            binding.editTextUserName.requestFocus()
+
+        if (binding.signInEditPassword.text.toString().isEmpty()) {
+            binding.signInEditPassword.error = "Please enter the password"
+            binding.signInEditPassword.requestFocus()
             return
         }
-        if (binding.editNumberPasswordFrg.text.toString().isEmpty()) {
-            binding.editNumberPasswordFrg.error = "Please enter the password"
-            binding.editNumberPasswordFrg.requestFocus()
+        if (binding.signInConfirmpw.text.toString().isEmpty() ||
+            binding.signInConfirmpw.text == binding.signInEditPassword.text ) {
+            binding.signInEditPassword.error = "Please cofirm the password"
+            binding.signInEditPassword.requestFocus()
             return
         }
+
         auth!!.createUserWithEmailAndPassword(
-            binding.editEmailAddressFrg.text.toString(),
-            binding.editNumberPasswordFrg.text.toString()
+            binding.signInEditEmail.text.toString(),
+            binding.signInEditPassword.text.toString()
         ).addOnCompleteListener(requireActivity()) { task ->
             if (task.isSuccessful) {
-                //checkEmail()
+                checkEmail()
             } else {
-                Toast.makeText(context, "Authentication Failed", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, binding.signInEditEmail.text.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Authentication Failed", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -81,19 +87,14 @@ class SignUpFragment : Fragment() {
         val user = auth?.currentUser
         user?.sendEmailVerification()?.addOnCompleteListener{ task->
             if(task.isSuccessful){
-                Toast.makeText(context,"Verification email is send",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),"Verification email is send",Toast.LENGTH_SHORT).show()
                 auth.signOut()
                 var fragment = LogInFragment()
                 fragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, fragment)?.commit()
             }
             else{
-                Toast.makeText(context,"Error Occurred",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),"Error Occurred",Toast.LENGTH_SHORT).show()
             }
         }
     }
-
-    override fun startActivityForResult(intent: Intent?, requestCode: Int) {
-        super.startActivityForResult(intent, requestCode)
-    }
-
 }
