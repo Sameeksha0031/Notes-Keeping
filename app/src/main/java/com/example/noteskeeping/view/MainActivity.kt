@@ -1,11 +1,10 @@
-package com.example.noteskeeping
+package com.example.noteskeeping.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.example.noteskeeping.R
 import com.example.noteskeeping.databinding.ActivityMainBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding

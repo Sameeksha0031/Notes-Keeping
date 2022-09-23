@@ -1,4 +1,4 @@
-package com.example.noteskeeping
+package com.example.noteskeeping.view
 
 import android.os.Bundle
 import android.util.Patterns
@@ -7,7 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.noteskeeping.R
 import com.example.noteskeeping.databinding.FragmentSignUpBinding
+import com.example.noteskeeping.model.User
+import com.example.noteskeeping.model.UserAuthServices
+import com.example.noteskeeping.viewModel.RegisterViewModel
+import com.example.noteskeeping.viewModel.RegisterViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -16,11 +23,13 @@ import com.google.firebase.auth.FirebaseAuth
 class SignUpFragment : Fragment() {
     lateinit var binding: FragmentSignUpBinding
     lateinit var auth: FirebaseAuth
+    private lateinit var registerViewModel: RegisterViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        registerViewModel = ViewModelProvider(this,RegisterViewModelFactory(UserAuthServices())).get(RegisterViewModel::class.java)
         return inflater.inflate(R.layout.fragment_sign_up, container, false)
     }
 
@@ -40,6 +49,16 @@ class SignUpFragment : Fragment() {
     }
 
     private fun signUpUser() {
+        var userName = ""
+        var userEmail = ""
+        var userPassword = ""
+
+        userName = binding.signEditUsername.text.toString().trim()
+        userEmail = binding.signInEditEmail.text.toString().trim()
+        userPassword = binding.signInEditPassword.text.toString().trim()
+
+        val user = User(userName = userName, email = userEmail, password = userPassword)
+
         if (binding.signEditUsername.text.isEmpty()) {
             binding.signEditUsername.error = "Please enter the User Name"
             binding.signEditUsername.requestFocus()
@@ -70,17 +89,15 @@ class SignUpFragment : Fragment() {
             return
         }
 
-        auth!!.createUserWithEmailAndPassword(
-            binding.signInEditEmail.text.toString(),
-            binding.signInEditPassword.text.toString()
-        ).addOnCompleteListener(requireActivity()) { task ->
-            if (task.isSuccessful) {
+        registerViewModel.registerUser(user)
+        registerViewModel.userRegisterStatus.observe(viewLifecycleOwner, Observer{
+            if(it.status){
+                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
                 checkEmail()
-            } else {
-                //Toast.makeText(context, binding.signInEditEmail.text.toString(), Toast.LENGTH_SHORT).show()
-                Toast.makeText(requireContext(), "Authentication Failed", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
             }
-        }
+        })
     }
 
     private fun checkEmail(){

@@ -1,13 +1,10 @@
-package com.example.noteskeeping
+package com.example.noteskeeping.view
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -16,17 +13,16 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.example.noteskeeping.R
 import com.example.noteskeeping.databinding.FragmentLogInBinding
+import com.example.noteskeeping.view.HomeActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.SignInButton
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 
 const val RC_SIGN_IN = 123
@@ -153,10 +149,9 @@ class LogInFragment : Fragment() {
     fun verifyEmail(){
         val user = auth.currentUser
         val vemail : Boolean? = user?.isEmailVerified
-        val intent = Intent(context,HomeActivity::class.java)
+        val intent = Intent(context, HomeActivity::class.java)
         startActivity(intent)
         if(vemail!!){
-            //fragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer,fragment)?.commit()
             startActivity(intent)
         }else{
             Toast.makeText(context,"Please Verified your Email Address",Toast.LENGTH_SHORT).show()
@@ -191,9 +186,7 @@ class LogInFragment : Fragment() {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential).addOnCompleteListener{
             if(it.isSuccessful){
-                val intent : Intent = Intent(requireContext(),HomeActivity::class.java)
-                intent.putExtra("email",account.email)
-                intent.putExtra("name",account.displayName)
+                val intent : Intent = Intent(requireContext(), HomeActivity::class.java)
                 startActivity(intent)
             }else{
                 Toast.makeText(requireContext(),it.exception.toString(),Toast.LENGTH_SHORT).show()
