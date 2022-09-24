@@ -5,7 +5,17 @@
     <item android:id="@+id/search_bar"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="Search Notes"
-        app:showAsAction="ifRoom|collapseActionView"
+        app:showAsAction="always|collapseActionView" />
+
+    <item android:id="@+id/profile_pic"
+        android:title="Profile Picture"
+        app:showAsAction="always"
+        android:actionLayout="@layout/profile_layout"/>
+
+    <item android:id="@+id/orientation"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="menu"
+        app:showAsAction="withText"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
 </menu>

@@ -8,9 +8,11 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.MenuItemCompat
 import androidx.core.view.marginLeft
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -20,6 +22,7 @@ import com.example.noteskeeping.databinding.ActivityHomeBinding.inflate
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import de.hdodenhof.circleimageview.CircleImageView
 
 
 class HomeActivity : AppCompatActivity() {
@@ -80,9 +83,26 @@ class HomeActivity : AppCompatActivity() {
         replaceFragment(HomeFragment())
     }
 
+    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        if(R.id.profile_pic.){
+
+        }
+        return super.onOptionsItemSelected(item)
+    }*/
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {
             return true
+        } else {
+            when (item.itemId) {
+                R.id.search_bar -> return true
+                R.id.profile_pic -> {
+                    Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
+                    return true
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -94,9 +114,14 @@ class HomeActivity : AppCompatActivity() {
         fragment_Transaction.commit()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    /*override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.search_menu, menu)
+
+
+        //val menuItem = menu?.findItem(R.id.search_bar)
+        //val view = MenuItemCompat.getActionView(menuItem)
+        //val profileImage: CircleImageView = view.findViewById(R.id.profile_pic)
 
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchItem = menu?.findItem(R.id.search_bar)
@@ -104,7 +129,8 @@ class HomeActivity : AppCompatActivity() {
 
         searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
 
-        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object :
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchView.clearFocus()
                 searchView.setQuery("", false)
@@ -117,6 +143,7 @@ class HomeActivity : AppCompatActivity() {
                 return false
             }
         })
+
         return true
-    }
+    }*/
 }

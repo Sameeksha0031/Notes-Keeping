@@ -13,9 +13,13 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.example.noteskeeping.R
 import com.example.noteskeeping.databinding.FragmentLogInBinding
+import com.example.noteskeeping.model.User
+import com.example.noteskeeping.model.UserAuthServices
 import com.example.noteskeeping.view.HomeActivity
+import com.example.noteskeeping.viewModel.LogInViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -31,6 +35,8 @@ class LogInFragment : Fragment() {
     //var checkForLogin : Boolean = false
     lateinit var binding: FragmentLogInBinding
     private lateinit var auth : FirebaseAuth
+    private lateinit var logInViewModel: LogInViewModel
+    private lateinit var userAuthServices: UserAuthServices // doubt
     private lateinit var googleSignInClient: GoogleSignInClient
     //var prg : ProgressDialog ? = null
     override fun onCreateView(
@@ -45,12 +51,14 @@ class LogInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLogInBinding.bind(view)
         auth = FirebaseAuth.getInstance()
+        logInViewModel = LogInViewModel(UserAuthServices())
+        userAuthServices = UserAuthServices() //doubt
         //prg = ProgressDialog(context)
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+        //val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+          //  .requestIdToken(getString(R.string.default_))
+           // .requestEmail()
+            //.build()
+        //googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
 
         binding.googleSignInButton.setOnClickListener{
             signInGoogle()
@@ -98,8 +106,16 @@ class LogInFragment : Fragment() {
 
 
     private fun doLogin() {
+        var userName = ""
+        var userEmail = ""
+        var userPassword = ""
         //prg?.setMessage("Login")
         //prg?.show()
+        userEmail = binding.loginEditEmail.text.toString().trim()
+        userPassword = binding.loginEditPassword.text.toString().trim()
+
+        val user = User(userName = userName, email = userEmail, password = userPassword)
+
         if (binding.loginEditEmail.text.toString().isEmpty()) {
             binding.loginEditEmail.error = "Please enter the Email Address"
             binding.loginEditEmail.requestFocus()
@@ -117,7 +133,7 @@ class LogInFragment : Fragment() {
             binding.loginEditPassword.requestFocus()
             return
         }
-        auth!!.signInWithEmailAndPassword(binding.loginEditEmail.text.toString(),
+        /*auth!!.signInWithEmailAndPassword(binding.loginEditEmail.text.toString(),
             binding.loginEditPassword.text.toString()).addOnCompleteListener{ task ->
             if(task.isSuccessful){
                 //prg?.dismiss()
@@ -131,16 +147,29 @@ class LogInFragment : Fragment() {
                 Toast.makeText(context,"Login Fail",Toast.LENGTH_SHORT).show()
             }
 
-        }
+        }*/
+        logInViewModel.loginUser(user)
+        logInViewModel.userLogin.observe(viewLifecycleOwner, Observer {
+            onStart()
+            if(it.status){
+                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+                val intent = Intent(context, HomeActivity::class.java)
+                startActivity(intent)
+            }else{
+                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+            }
+        })
+
+
     }
 
-    override fun onStart() {
+    /*override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
-        updateUI(currentUser)
-    }
+        userAuthServices.updateUI(currentUser)
+    }*/
 
-    private fun updateUI(currentUser: FirebaseUser?) {
+    /*private fun updateUI(currentUser: FirebaseUser?) {
 
         if(currentUser != null){
             verifyEmail()
@@ -157,7 +186,7 @@ class LogInFragment : Fragment() {
             Toast.makeText(context,"Please Verified your Email Address",Toast.LENGTH_SHORT).show()
             auth.signOut()
         }
-    }
+    }*/
 
     private fun signInGoogle(){
         val signInIntent = googleSignInClient.signInIntent
