@@ -75,4 +75,10 @@ class UserAuthServices(){
             auth.signOut()
         }
     }
+    fun checkingForUser(listener: (AuthListener) -> Unit){
+        var currentUser : FirebaseUser? = auth.currentUser
+        if(currentUser != null){
+            listener(AuthListener(true,""))
+        }
+    }
 }

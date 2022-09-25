@@ -54,11 +54,11 @@ class LogInFragment : Fragment() {
         logInViewModel = LogInViewModel(UserAuthServices())
         userAuthServices = UserAuthServices() //doubt
         //prg = ProgressDialog(context)
-        //val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-          //  .requestIdToken(getString(R.string.default_))
-           // .requestEmail()
-            //.build()
-        //googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
 
         binding.googleSignInButton.setOnClickListener{
             signInGoogle()
@@ -133,24 +133,9 @@ class LogInFragment : Fragment() {
             binding.loginEditPassword.requestFocus()
             return
         }
-        /*auth!!.signInWithEmailAndPassword(binding.loginEditEmail.text.toString(),
-            binding.loginEditPassword.text.toString()).addOnCompleteListener{ task ->
-            if(task.isSuccessful){
-                //prg?.dismiss()
-                Toast.makeText(context,"Login Successful",Toast.LENGTH_SHORT).show()
-                val user = auth.currentUser
-                updateUI(user)
-            }else{
-                //prg?.dismiss()
-                //Log.w(TAG,"Authentication : Fail",task.exception)
-                updateUI(null)
-                Toast.makeText(context,"Login Fail",Toast.LENGTH_SHORT).show()
-            }
 
-        }*/
         logInViewModel.loginUser(user)
         logInViewModel.userLogin.observe(viewLifecycleOwner, Observer {
-            onStart()
             if(it.status){
                 Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
                 val intent = Intent(context, HomeActivity::class.java)
@@ -159,34 +144,17 @@ class LogInFragment : Fragment() {
                 Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
             }
         })
-
-
     }
 
-    /*override fun onStart() {
+    override fun onStart() {
         super.onStart()
-        val currentUser = auth.currentUser
-        userAuthServices.updateUI(currentUser)
-    }*/
-
-    /*private fun updateUI(currentUser: FirebaseUser?) {
-
-        if(currentUser != null){
-            verifyEmail()
+        userAuthServices.checkingForUser {
+            if(it.status){
+                val intent = Intent(context, HomeActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
-    fun verifyEmail(){
-        val user = auth.currentUser
-        val vemail : Boolean? = user?.isEmailVerified
-        val intent = Intent(context, HomeActivity::class.java)
-        startActivity(intent)
-        if(vemail!!){
-            startActivity(intent)
-        }else{
-            Toast.makeText(context,"Please Verified your Email Address",Toast.LENGTH_SHORT).show()
-            auth.signOut()
-        }
-    }*/
 
     private fun signInGoogle(){
         val signInIntent = googleSignInClient.signInIntent
