@@ -18,7 +18,6 @@ import com.example.noteskeeping.R
 import com.example.noteskeeping.databinding.FragmentLogInBinding
 import com.example.noteskeeping.model.User
 import com.example.noteskeeping.model.UserAuthServices
-import com.example.noteskeeping.view.HomeActivity
 import com.example.noteskeeping.viewModel.LogInViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -26,7 +25,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 
 const val RC_SIGN_IN = 123
@@ -87,6 +85,9 @@ class LogInFragment : Fragment() {
     }
 
     private fun forgotPassword(userEmail: EditText) {
+        var userName = ""
+        var userPassword = ""
+        val user = User(userId = "", userName = "userName",email = userEmail.text.toString(), password = "userPassword")
         if (userEmail.text.toString().isEmpty()) {
             return
         }
@@ -95,15 +96,13 @@ class LogInFragment : Fragment() {
         ) {
             return
         }
-        //Toast.makeText(context,"Email is sent",Toast.LENGTH_SHORT).show()
-        auth.sendPasswordResetEmail(userEmail.text.toString())
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(context,"Email is sent",Toast.LENGTH_SHORT).show()
-                }
+        logInViewModel.forgotPassword(user)
+        logInViewModel.forgotPassword.observe(viewLifecycleOwner, Observer {
+            if(it.status){
+                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
             }
+        })
     }
-
 
     private fun doLogin() {
         var userName = ""
@@ -116,19 +115,19 @@ class LogInFragment : Fragment() {
 
         val user = User(userName = userName, email = userEmail, password = userPassword)
 
-        if (binding.loginEditEmail.text.toString().isEmpty()) {
+        if (userEmail.isEmpty()) {
             binding.loginEditEmail.error = "Please enter the Email Address"
             binding.loginEditEmail.requestFocus()
             return
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(binding.loginEditEmail.text.toString())
+        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail)
                 .matches()
         ) {
             binding.loginEditEmail.error = "Please enter valid Email Address"
             binding.loginEditEmail.requestFocus()
             return
         }
-        if (binding.loginEditPassword.text.toString().isEmpty()) {
+        if (userPassword.isEmpty()) {
             binding.loginEditPassword.error = "Please enter the password"
             binding.loginEditPassword.requestFocus()
             return
@@ -148,7 +147,7 @@ class LogInFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        userAuthServices.checkingForUser {
+        userAuthServices.checkingForUserStatus {
             if(it.status){
                 val intent = Intent(context, HomeActivity::class.java)
                 startActivity(intent)

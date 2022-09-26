@@ -9,76 +9,97 @@ import android.widget.Toast
 import com.example.noteskeeping.view.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 
-class UserAuthServices(){
+class UserAuthServices() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var firebaseFireStore: FirebaseFirestore
 
     init {
         initService()
     }
 
-    private fun initService(){
+    private fun initService() {
         auth = FirebaseAuth.getInstance()
+        firebaseFireStore = FirebaseFirestore.getInstance()
     }
 
-    fun userRegistration(user: User,listener: (AuthListener)-> Unit){
+    fun userRegistration(user: User, listener: (AuthListener) -> Unit) {
         auth!!.createUserWithEmailAndPassword(
-           user.email,user.password
+            user.email, user.password
         ).addOnCompleteListener() {
             if (it.isSuccessful) {
-                Log.d(ContentValues.TAG,"Create user successfully")
-                listener(AuthListener(true,"user registration successful"))
+                Log.d(ContentValues.TAG, "Create user successfully")
+                listener(AuthListener(true, "user registration successful"))
+                saveFireStore(user)
             } else {
-                Log.d(ContentValues.TAG,"Create user fail")
-                listener(AuthListener(true,"user registration Failed"))
+                Log.d(ContentValues.TAG, "Create user fail")
+                listener(AuthListener(true, "user registration Failed"))
             }
         }
     }
 
-    fun userLogin(user: User,listener: (AuthListener) -> Unit) {
-        auth!!.signInWithEmailAndPassword(user.email,user.password).addOnCompleteListener{ task ->
-            if(task.isSuccessful){
+    fun userLogin(user: User, listener: (AuthListener) -> Unit) {
+        auth!!.signInWithEmailAndPassword(user.email, user.password).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
                 val userLogin = auth.currentUser
                 var updateUser = updateUI(userLogin)
-                if(updateUser == true){
-                    Log.d(ContentValues.TAG,"User Login successfully")
-                    listener(AuthListener(true,"Login Successful"))
-                }else{
-                    Log.d(ContentValues.TAG,"User Login fail")
-                    listener(AuthListener(true,"Login Failed"))
-                }
+                //if(updateUser == true){
+                Log.d(ContentValues.TAG, "User Login successfully")
+                listener(AuthListener(true, "Login Successful"))
+                //}else{
+                //  Log.d(ContentValues.TAG,"User Login fail")
+                //listener(AuthListener(false,"Login Failed"))
+                //}
 
-            }else{
-                Log.d(TAG,"Authentication : Fail",task.exception)
+            } else {
+                Log.d(TAG, "Authentication : Fail", task.exception)
+                listener(AuthListener(false, "Login Failed"))
                 updateUI(null)
             }
 
         }
     }
-    fun updateUI(currentUser: FirebaseUser?) : Boolean{
-        var emailToverify : Boolean = false
-        if(currentUser != null){
-            var emailToverify = verifyEmail()
+
+    fun updateUI(currentUser: FirebaseUser?): Boolean {
+        var emailToverify: Boolean = false
+        if (currentUser != null) {
+            emailToverify = true
             return emailToverify
         }
         return emailToverify
     }
-    fun verifyEmail() : Boolean{
-        val user = auth.currentUser
-        val vemail : Boolean? = user?.isEmailVerified
-        //val intent = Intent(context, HomeActivity::class.java)
-        //startActivity(intent)
-        if(vemail!!){
-            return true
-        }else{
-            return false
-            auth.signOut()
+
+
+    fun checkingForUserStatus(listener: (AuthListener) -> Unit) {
+        var currentUser: FirebaseUser? = auth.currentUser
+        if (currentUser != null) {
+            listener(AuthListener(true, ""))
         }
     }
-    fun checkingForUser(listener: (AuthListener) -> Unit){
-        var currentUser : FirebaseUser? = auth.currentUser
-        if(currentUser != null){
-            listener(AuthListener(true,""))
-        }
+
+    fun userForgotPassword(user: User, listener: (AuthListener) -> Unit) {
+        auth!!.sendPasswordResetEmail(user.email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    listener(AuthListener(true, "Email is sent"))
+                    Log.d(TAG, "Email sent")
+                }else{
+                    listener(AuthListener(true, "Email is not sent"))
+                }
+            }
+    }
+
+    fun saveFireStore(user: User) {
+        var userID = auth.currentUser?.uid.toString()
+        val userMapStore = HashMap<String, String>()
+        userMapStore["UserId"] = userID
+        userMapStore["UserName"] = user.userName
+        userMapStore["UserEmail"] = user.email
+        userMapStore["Password"] = user.password
+
+        firebaseFireStore.collection("users").document(userID)
+            .set(userMapStore).addOnSuccessListener {
+            }
     }
 }

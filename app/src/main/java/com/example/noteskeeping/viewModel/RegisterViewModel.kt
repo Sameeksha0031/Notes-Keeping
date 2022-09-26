@@ -11,12 +11,11 @@ class RegisterViewModel(private var userAuthServices: UserAuthServices) : ViewMo
     private var _UserRegisterStatus = MutableLiveData<AuthListener>()
     val userRegisterStatus = _UserRegisterStatus as LiveData<AuthListener>
 
-    fun registerUser(user: User){
-        userAuthServices.userRegistration(user){
-            if(it.status){
+    fun registerUser(user: User) {
+        userAuthServices.userRegistration(user) {
+            if (it.status) {
                 _UserRegisterStatus.value = it
             }
         }
-
     }
 }

@@ -1,6 +1,7 @@
 package com.example.noteskeeping.view
 
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -11,19 +12,23 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.noteskeeping.R
 import com.example.noteskeeping.databinding.FragmentSignUpBinding
+import com.example.noteskeeping.model.AuthListener
 import com.example.noteskeeping.model.User
 import com.example.noteskeeping.model.UserAuthServices
 import com.example.noteskeeping.viewModel.RegisterViewModel
 import com.example.noteskeeping.viewModel.RegisterViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
-
-
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class SignUpFragment : Fragment() {
+
     lateinit var binding: FragmentSignUpBinding
     lateinit var auth: FirebaseAuth
+    lateinit var firestore: FirebaseFirestore
     private lateinit var registerViewModel: RegisterViewModel
+    private lateinit var userAuthServices: UserAuthServices
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,10 +42,11 @@ class SignUpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSignUpBinding.bind(view)
         auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         binding.btnBack.setOnClickListener {
             auth.signOut()
-            var fragment = LogInFragment()
+            val fragment = LogInFragment()
             fragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, fragment)?.commit()
         }
         binding.signInBtnsign.setOnClickListener {
@@ -56,20 +62,21 @@ class SignUpFragment : Fragment() {
         userName = binding.signEditUsername.text.toString().trim()
         userEmail = binding.signInEditEmail.text.toString().trim()
         userPassword = binding.signInEditPassword.text.toString().trim()
+        var userConfirm = binding.signInConfirmpw.text.toString().trim()
 
         val user = User(userName = userName, email = userEmail, password = userPassword)
 
-        if (binding.signEditUsername.text.isEmpty()) {
+        if (userName.isEmpty()) {
             binding.signEditUsername.error = "Please enter the User Name"
             binding.signEditUsername.requestFocus()
             return
         }
-        if (binding.signInEditEmail.text.isEmpty()) {
+        if (userEmail.isEmpty()) {
             binding.signInEditEmail.error = "Please enter the Email Address"
             binding.signInEditEmail.requestFocus()
             return
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(binding.signInEditEmail.text.toString())
+        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail.toString())
                 .matches()
         ) {
             binding.signInEditEmail.error = "Please enter valid Email Address"
@@ -77,13 +84,12 @@ class SignUpFragment : Fragment() {
             return
         }
 
-        if (binding.signInEditPassword.text.toString().isEmpty()) {
+        if (userPassword.isEmpty()) {
             binding.signInEditPassword.error = "Please enter the password"
             binding.signInEditPassword.requestFocus()
             return
         }
-        if (binding.signInConfirmpw.text.toString().isEmpty() ||
-            binding.signInConfirmpw.text == binding.signInEditPassword.text ) {
+        if (userConfirm.isEmpty() || binding.signInConfirmpw.text == binding.signInEditPassword.text ) {
             binding.signInEditPassword.error = "Please cofirm the password"
             binding.signInEditPassword.requestFocus()
             return
@@ -92,26 +98,39 @@ class SignUpFragment : Fragment() {
         registerViewModel.registerUser(user)
         registerViewModel.userRegisterStatus.observe(viewLifecycleOwner, Observer{
             if(it.status){
-                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
-                checkEmail()
+                //Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+                //saveFireStore(user)
             }else{
                 Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
             }
         })
+
+        /*registerViewModel.saveDataInFireBase(user)
+        registerViewModel.userRegisterStatus.observe(viewLifecycleOwner, Observer{
+            if(it.status){
+                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+            }
+        })*/
     }
 
-    private fun checkEmail(){
-        val user = auth?.currentUser
-        user?.sendEmailVerification()?.addOnCompleteListener{ task->
-            if(task.isSuccessful){
-                Toast.makeText(requireContext(),"Verification email is send",Toast.LENGTH_SHORT).show()
-                auth.signOut()
-                var fragment = LogInFragment()
-                fragmentManager?.beginTransaction()?.replace(R.id.fragmentContainer, fragment)?.commit()
+    /*fun saveFireStore(user: User){
+        /*val userMapStore = HashMap<String, String>()
+        userMapStore["UserId"] = user.userId
+        userMapStore["UserName"] = user.userName
+        userMapStore["UserEmail"] = user.email
+        userMapStore["Password"] = user.password*/
+        val userRecord = hashMapOf("UserId" to user.userId,"UserName" to user.userName,
+            "UserEmail" to user.email,"Password" to user.password)
+
+        firestore.collection("users")
+            .add(userRecord as Map<String,String>)
+            .addOnSuccessListener {
+                Log.e("TAG","Documnentaion added with Id")
             }
-            else{
-                Toast.makeText(requireContext(),"Error Occurred",Toast.LENGTH_SHORT).show()
+            .addOnFailureListener{
+                Log.e("TAG","error adding document")
             }
-        }
-    }
+    }*/
 }
