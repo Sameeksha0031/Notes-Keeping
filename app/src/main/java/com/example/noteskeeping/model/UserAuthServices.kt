@@ -1,5 +1,6 @@
 package com.example.noteskeeping.model
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
@@ -9,6 +10,9 @@ import android.widget.Toast
 import com.example.noteskeeping.view.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 
 class UserAuthServices() {
@@ -102,4 +106,37 @@ class UserAuthServices() {
             .set(userMapStore).addOnSuccessListener {
             }
     }
+
+    /*fun readFireStore(){
+        val userID = auth.currentUser?.uid.toString()
+        val documentReference : DocumentReference = firebaseFireStore
+            .collection("users").document(userID)
+        documentReference.addSnapshotListener{ snapshot , e ->
+            if(e != null){
+                Log.w(TAG,"Listen Failed",e)
+                return@addSnapshotListener
+            }
+            if(snapshot != null && snapshot.exists()){
+                Log.d(TAG,"Current data : ${snapshot.data}")
+            }else{
+                Log.d(TAG,"Current data : null")
+            }
+
+        }
+    }*/
+
+   /* fun readFireStore(){
+        var userName = ""
+        var userEmail = ""
+        var userPassword = ""
+        val userID = auth.currentUser?.uid.toString()
+        val user = User(userID ,userName = userName, email = userEmail, password = userPassword)
+        firebaseFireStore.collection("users").document(userID).get().addOnSuccessListener{
+            if(it.exists()){
+                user.userName = it.get("UserName") as String
+                Log.d(TAG,"${user.userName}")
+                Toast.makeText(requireConrext(),"${user.userName}",Toast.LENGTH_LONG).show()
+            }
+        }
+    }*/
 }

@@ -1,25 +1,21 @@
 package com.example.noteskeeping.view
 
-import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.MenuItemCompat
-import androidx.core.view.marginLeft
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.noteskeeping.R
 import com.example.noteskeeping.databinding.ActivityHomeBinding
 import com.example.noteskeeping.databinding.ActivityHomeBinding.inflate
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
@@ -30,6 +26,9 @@ class HomeActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
     lateinit var toggle: ActionBarDrawerToggle
     lateinit var toolbar: MaterialToolbar
+    lateinit var floatingActionButton: FloatingActionButton
+    lateinit var circleImageView: CircleImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = inflate(layoutInflater)
@@ -37,6 +36,8 @@ class HomeActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         toolbar = binding.customToolbar
         setSupportActionBar(toolbar)
+        floatingActionButton = FloatingActionButton(this)
+        circleImageView = CircleImageView(this)
 
         var drawerLayout: DrawerLayout = binding.drawerLayout
         var navView: NavigationView = binding.navigationView
@@ -80,18 +81,18 @@ class HomeActivity : AppCompatActivity() {
             true
         }
 
-        replaceFragment(HomeFragment())
+        //replaceFragment(HomeFragment())
+        replaceFragment(Fragment())
+
+        floatingActionButton = binding.floatingButton
+        floatingActionButton.setOnClickListener{
+            Toast.makeText(this,"Floating button is click",Toast.LENGTH_SHORT).show()
+            floatingActionButton.hide()
+            replaceFragment(HomeFragment())
+        }
+
     }
 
-    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        if(R.id.profile_pic.){
-
-        }
-        return super.onOptionsItemSelected(item)
-    }*/
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {
             return true
@@ -114,14 +115,19 @@ class HomeActivity : AppCompatActivity() {
         fragment_Transaction.commit()
     }
 
-    /*override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.search_menu, menu)
 
+        var menuItem = menu?.findItem(R.id.profile_pic)
+        var view = MenuItemCompat.getActionView(menuItem)
+        var profileImage : CircleImageView = view.findViewById(R.id.profile_image)
 
-        //val menuItem = menu?.findItem(R.id.search_bar)
-        //val view = MenuItemCompat.getActionView(menuItem)
-        //val profileImage: CircleImageView = view.findViewById(R.id.profile_pic)
+        profileImage.setOnClickListener{
+            Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
+            val dialog = CustomDialogFragment()
+            dialog.show(supportFragmentManager,"custom Dialog")
+        }
 
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchItem = menu?.findItem(R.id.search_bar)
@@ -143,7 +149,6 @@ class HomeActivity : AppCompatActivity() {
                 return false
             }
         })
-
         return true
-    }*/
+    }
 }

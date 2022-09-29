@@ -27,7 +27,6 @@ class SignUpFragment : Fragment() {
     lateinit var auth: FirebaseAuth
     lateinit var firestore: FirebaseFirestore
     private lateinit var registerViewModel: RegisterViewModel
-    private lateinit var userAuthServices: UserAuthServices
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -98,39 +97,12 @@ class SignUpFragment : Fragment() {
         registerViewModel.registerUser(user)
         registerViewModel.userRegisterStatus.observe(viewLifecycleOwner, Observer{
             if(it.status){
-                //Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
-                //saveFireStore(user)
+                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
             }else{
                 Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
             }
         })
 
-        /*registerViewModel.saveDataInFireBase(user)
-        registerViewModel.userRegisterStatus.observe(viewLifecycleOwner, Observer{
-            if(it.status){
-                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
-            }
-        })*/
     }
 
-    /*fun saveFireStore(user: User){
-        /*val userMapStore = HashMap<String, String>()
-        userMapStore["UserId"] = user.userId
-        userMapStore["UserName"] = user.userName
-        userMapStore["UserEmail"] = user.email
-        userMapStore["Password"] = user.password*/
-        val userRecord = hashMapOf("UserId" to user.userId,"UserName" to user.userName,
-            "UserEmail" to user.email,"Password" to user.password)
-
-        firestore.collection("users")
-            .add(userRecord as Map<String,String>)
-            .addOnSuccessListener {
-                Log.e("TAG","Documnentaion added with Id")
-            }
-            .addOnFailureListener{
-                Log.e("TAG","error adding document")
-            }
-    }*/
 }

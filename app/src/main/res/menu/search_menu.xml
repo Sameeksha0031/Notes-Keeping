@@ -5,17 +5,18 @@
     <item android:id="@+id/search_bar"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="Search Notes"
-        app:showAsAction="always|collapseActionView" />
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
     <item android:id="@+id/profile_pic"
-        android:title="Profile Picture"
+        android:title="Profile"
         app:showAsAction="always"
-        android:actionLayout="@layout/profile_layout"/>
+        app:actionLayout="@layout/profile_image"/>
 
-    <item android:id="@+id/orientation"
+    <!-- <item android:id="@+id/orientation"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="menu"
         app:showAsAction="withText"
-        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+        app:actionViewClass="androidx.appcompat.widget.SearchView" /> -->
 
 </menu>
