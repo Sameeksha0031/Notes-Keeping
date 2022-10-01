@@ -8,6 +8,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import com.example.noteskeeping.view.HomeActivity
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
@@ -95,7 +96,7 @@ class UserAuthServices() {
     }
 
     fun saveFireStore(user: User) {
-        var userID = auth.currentUser?.uid.toString()
+        val userID = auth.currentUser?.uid.toString()
         val userMapStore = HashMap<String, String>()
         userMapStore["UserId"] = userID
         userMapStore["UserName"] = user.userName
@@ -107,25 +108,7 @@ class UserAuthServices() {
             }
     }
 
-    /*fun readFireStore(){
-        val userID = auth.currentUser?.uid.toString()
-        val documentReference : DocumentReference = firebaseFireStore
-            .collection("users").document(userID)
-        documentReference.addSnapshotListener{ snapshot , e ->
-            if(e != null){
-                Log.w(TAG,"Listen Failed",e)
-                return@addSnapshotListener
-            }
-            if(snapshot != null && snapshot.exists()){
-                Log.d(TAG,"Current data : ${snapshot.data}")
-            }else{
-                Log.d(TAG,"Current data : null")
-            }
-
-        }
-    }*/
-
-   /* fun readFireStore(){
+   /*fun readFireStore(){
         var userName = ""
         var userEmail = ""
         var userPassword = ""
@@ -139,4 +122,22 @@ class UserAuthServices() {
             }
         }
     }*/
+
+     fun readFireStore(user : User,dialogAuthListener: (DialogAuthListener)-> Unit)  {
+        val userID = auth.currentUser?.uid
+        lateinit var userInformation : User
+        if (userID != null) {
+            firebaseFireStore.collection("users").document(userID)
+                .get()
+                .addOnCompleteListener(OnCompleteListener {
+                    if(it.isSuccessful){
+                        userInformation = User(userId = it.result.getString("UserId").toString(),
+                            userName = it.result.getString("UserName").toString(), email =
+                            it.result.getString("UserEmail").toString(), password =
+                            it.result.getString("Password").toString())
+                        dialogAuthListener(DialogAuthListener(userInformation,"Displaying the information", true))
+                    }
+                })
+        };
+    }
 }
