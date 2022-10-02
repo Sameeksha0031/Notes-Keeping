@@ -108,21 +108,6 @@ class UserAuthServices() {
             }
     }
 
-   /*fun readFireStore(){
-        var userName = ""
-        var userEmail = ""
-        var userPassword = ""
-        val userID = auth.currentUser?.uid.toString()
-        val user = User(userID ,userName = userName, email = userEmail, password = userPassword)
-        firebaseFireStore.collection("users").document(userID).get().addOnSuccessListener{
-            if(it.exists()){
-                user.userName = it.get("UserName") as String
-                Log.d(TAG,"${user.userName}")
-                Toast.makeText(requireConrext(),"${user.userName}",Toast.LENGTH_LONG).show()
-            }
-        }
-    }*/
-
      fun readFireStore(user : User,dialogAuthListener: (DialogAuthListener)-> Unit)  {
         val userID = auth.currentUser?.uid
         lateinit var userInformation : User
@@ -134,7 +119,7 @@ class UserAuthServices() {
                         userInformation = User(userId = it.result.getString("UserId").toString(),
                             userName = it.result.getString("UserName").toString(), email =
                             it.result.getString("UserEmail").toString(), password =
-                            it.result.getString("Password").toString())
+                            it.result.getString("Password").toString(),it.result.getString("Profile").toString())
                         dialogAuthListener(DialogAuthListener(userInformation,"Displaying the information", true))
                     }
                 })

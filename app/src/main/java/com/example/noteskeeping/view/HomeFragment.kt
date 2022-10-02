@@ -38,6 +38,7 @@ class HomeFragment : Fragment() {
             var intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
         }
+
     }
 
     override fun onResume() {

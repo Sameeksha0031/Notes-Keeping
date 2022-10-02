@@ -63,7 +63,7 @@ class SignUpFragment : Fragment() {
         userPassword = binding.signInEditPassword.text.toString().trim()
         var userConfirm = binding.signInConfirmpw.text.toString().trim()
 
-        val user = User(userName = userName, email = userEmail, password = userPassword)
+        val user = User(userName = userName, email = userEmail, password = userPassword, profile = "")
 
         if (userName.isEmpty()) {
             binding.signEditUsername.error = "Please enter the User Name"

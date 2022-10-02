@@ -4,8 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/dialog_Fragment"
     android:padding="10dp"
     tools:context=".view.CustomDialogFragment">
+
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
@@ -18,7 +21,7 @@
         android:layout_marginBottom="125dp"
         android:clickable="true"
         android:foregroundGravity="center"
-        android:src="@drawable/pf_lilii"
+        android:src="@drawable/ic_baseline_account_circle_24"
         app:civ_border_color="@color/white"
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -60,5 +63,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/change_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_photo_camera_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.988" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

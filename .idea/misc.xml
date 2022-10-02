@@ -9,8 +9,11 @@
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/custom_button.xml" value="0.1695" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/custom_textview.xml" value="0.1625" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/dialog.xml" value="0.241" />
+        <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.1065" />
+        <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.136" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.2405" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.1765" />
+        <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_photo_camera_24.xml" value="0.188" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.103" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_launcher_background.xml" value="0.225" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_sharp_perm_identity_24.xml" value="0.129" />
@@ -25,8 +28,9 @@
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/forgot_password.xml" value="0.2296875" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_dialog.xml" value="0.264" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_forgot_password.xml" value="0.2" />
-        <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_home.xml" value="0.2" />
+        <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_home.xml" value="0.16" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_log_in.xml" value="0.264" />
+        <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_sign_in.xml" value="0.264" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_sign_up.xml" value="0.2" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/headerfile.xml" value="0.16" />

@@ -87,7 +87,7 @@ class LogInFragment : Fragment() {
     private fun forgotPassword(userEmail: EditText) {
         var userName = ""
         var userPassword = ""
-        val user = User(userId = "", userName = "userName",email = userEmail.text.toString(), password = "userPassword")
+        val user = User(userId = "", userName = "userName",email = userEmail.text.toString(), password = "userPassword", profile = "")
         if (userEmail.text.toString().isEmpty()) {
             return
         }
@@ -113,7 +113,7 @@ class LogInFragment : Fragment() {
         userEmail = binding.loginEditEmail.text.toString().trim()
         userPassword = binding.loginEditPassword.text.toString().trim()
 
-        val user = User(userName = userName, email = userEmail, password = userPassword)
+        val user = User(userName = userName, email = userEmail, password = userPassword, profile = "")
 
         if (userEmail.isEmpty()) {
             binding.loginEditEmail.error = "Please enter the Email Address"
