@@ -1,24 +1,25 @@
 package com.example.noteskeeping.model
 
-import android.app.Activity
 import android.content.ContentValues
 import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.Intent
+import android.net.Uri
 import android.util.Log
-import android.widget.Toast
-import com.example.noteskeeping.view.HomeActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.util.*
+import kotlin.collections.HashMap
 
 class UserAuthServices() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firebaseFireStore: FirebaseFirestore
+    private val PICK_IMAGE_REQUEST = 71
+    private var filePath: Uri? = null
+    private var firebaseStore: FirebaseStorage? = null
+    val userMapStore = HashMap<String, String>()
 
     init {
         initService()
@@ -27,6 +28,7 @@ class UserAuthServices() {
     private fun initService() {
         auth = FirebaseAuth.getInstance()
         firebaseFireStore = FirebaseFirestore.getInstance()
+        firebaseStore = FirebaseStorage.getInstance()
     }
 
     fun userRegistration(user: User, listener: (AuthListener) -> Unit) {
@@ -97,11 +99,12 @@ class UserAuthServices() {
 
     fun saveFireStore(user: User) {
         val userID = auth.currentUser?.uid.toString()
-        val userMapStore = HashMap<String, String>()
+        //val userMapStore = HashMap<String, String>()
         userMapStore["UserId"] = userID
         userMapStore["UserName"] = user.userName
         userMapStore["UserEmail"] = user.email
         userMapStore["Password"] = user.password
+        userMapStore["Profile"] = user.profile
 
         firebaseFireStore.collection("users").document(userID)
             .set(userMapStore).addOnSuccessListener {
@@ -124,5 +127,38 @@ class UserAuthServices() {
                     }
                 })
         };
+    }
+
+    fun uploadImage(user: User,filePath : Uri , listener: (AuthListener) -> Unit){
+        val userID = auth.currentUser?.uid
+        //val userMapStore = HashMap<String, String>()
+        if(userID != null) {
+            if (filePath != null) {
+                val storageRef = FirebaseStorage.getInstance().getReference("myImages/"+ userID.toString()).child("profile")
+                val uploadTask = storageRef?.putFile(filePath!!)
+                uploadTask?.addOnSuccessListener {
+                    val downloadUrl = storageRef.downloadUrl
+                    downloadUrl.addOnSuccessListener {
+                        user.profile = it.toString()
+                        listener(AuthListener(true, "Image Uploaded successfully "))
+                    }
+                }
+            } else {
+                listener(AuthListener(false, "Image Failed to Upload"))
+            }
+        }
+    }
+
+    fun writeNotes(note : Notes , listener: (AuthListener) -> Unit){
+        val userID = auth.currentUser?.uid
+        val noteHashMap = HashMap<String,String>()
+        if(userID != null){
+            noteHashMap["NoteID"] = note.noteId
+            noteHashMap["Title"] = note.title
+            noteHashMap["Note"] = note.notes
+        }
+        firebaseFireStore.collection("users").document().collection("Notes").document("NotesID")
+            .get()
+            .addOnSuccessListener {  }
     }
 }
