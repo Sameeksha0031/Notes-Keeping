@@ -148,17 +148,4 @@ class UserAuthServices() {
             }
         }
     }
-
-    fun writeNotes(note : Notes , listener: (AuthListener) -> Unit){
-        val userID = auth.currentUser?.uid
-        val noteHashMap = HashMap<String,String>()
-        if(userID != null){
-            noteHashMap["NoteID"] = note.noteId
-            noteHashMap["Title"] = note.title
-            noteHashMap["Note"] = note.notes
-        }
-        firebaseFireStore.collection("users").document().collection("Notes").document("NotesID")
-            .get()
-            .addOnSuccessListener {  }
-    }
 }
