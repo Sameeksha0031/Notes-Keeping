@@ -11,6 +11,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.R
 import com.example.noteskeeping.databinding.ActivityHomeBinding
 import com.example.noteskeeping.databinding.ActivityHomeBinding.inflate
@@ -26,8 +28,10 @@ class HomeActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
     lateinit var toggle: ActionBarDrawerToggle
     lateinit var toolbar: MaterialToolbar
-    lateinit var floatingActionButton: FloatingActionButton
+//    lateinit var floatingActionButton: FloatingActionButton
     lateinit var circleImageView: CircleImageView
+//    var recyclerViewManager: RecyclerView.LayoutManager?= null
+//    var noteAdapter : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +40,13 @@ class HomeActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         toolbar = binding.customToolbar
         setSupportActionBar(toolbar)
-        floatingActionButton = FloatingActionButton(this)
+//        floatingActionButton = FloatingActionButton(this)
         circleImageView = CircleImageView(this)
+
+//        recyclerViewManager = LinearLayoutManager(this)
+//        binding.notesList.layoutManager = recyclerViewManager
+//        noteAdapter = NoteRecyclerViewAdapter()
+//        binding.notesList.adapter = noteAdapter
 
         var drawerLayout: DrawerLayout = binding.drawerLayout
         var navView: NavigationView = binding.navigationView
@@ -82,14 +91,14 @@ class HomeActivity : AppCompatActivity() {
         }
 
         //replaceFragment(HomeFragment())
-        replaceFragment(Fragment())
+        replaceFragment(NoteFragment())
 
-        floatingActionButton = binding.floatingButton
-        floatingActionButton.setOnClickListener{
-            Toast.makeText(this,"Floating button is click",Toast.LENGTH_SHORT).show()
-            floatingActionButton.hide()
-            replaceFragment(HomeFragment())
-        }
+//        floatingActionButton = binding.floatingButton
+//        floatingActionButton.setOnClickListener{
+//            Toast.makeText(this,"Floating button is click",Toast.LENGTH_SHORT).show()
+//            floatingActionButton.hide()
+//            replaceFragment(HomeFragment())
+//        }
 
     }
 
@@ -127,6 +136,7 @@ class HomeActivity : AppCompatActivity() {
             Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
             val dialog = CustomDialogFragment()
             dialog.show(supportFragmentManager,"custom Dialog")
+
         }
 
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager

@@ -91,7 +91,7 @@ class UserAuthServices() {
                 if (task.isSuccessful) {
                     listener(AuthListener(true, "Email is sent"))
                     Log.d(TAG, "Email sent")
-                }else{
+                } else {
                     listener(AuthListener(true, "Email is not sent"))
                 }
             }
@@ -108,44 +108,111 @@ class UserAuthServices() {
 
         firebaseFireStore.collection("users").document(userID)
             .set(userMapStore).addOnSuccessListener {
+                Log.d(
+                    "UserAuthServices",
+                    "Image View Created SaveFireStore ${user.profile.toString()}"
+                )
             }
     }
 
-     fun readFireStore(user : User,dialogAuthListener: (DialogAuthListener)-> Unit)  {
+    fun readFireStore(user: User, dialogAuthListener: (DialogAuthListener) -> Unit) {
         val userID = auth.currentUser?.uid
-        lateinit var userInformation : User
+        lateinit var userInformation: User
         if (userID != null) {
             firebaseFireStore.collection("users").document(userID)
                 .get()
                 .addOnCompleteListener(OnCompleteListener {
-                    if(it.isSuccessful){
-                        userInformation = User(userId = it.result.getString("UserId").toString(),
-                            userName = it.result.getString("UserName").toString(), email =
-                            it.result.getString("UserEmail").toString(), password =
-                            it.result.getString("Password").toString(),it.result.getString("Profile").toString())
-                        dialogAuthListener(DialogAuthListener(userInformation,"Displaying the information", true))
+                    if (it.isSuccessful) {
+                        userInformation = User(
+                            userId = it.result.getString("UserId").toString(),
+                            userName = it.result.getString("UserName").toString(),
+                            email =
+                            it.result.getString("UserEmail").toString(),
+                            password =
+                            it.result.getString("Password").toString(),
+                            it.result.getString("Profile").toString()
+                        )
+                        Log.d(
+                            "UserAuthServices",
+                            "Image View Created ReadFireStore ${
+                                it.result.getString("Profile").toString()
+                            }"
+                        )
+                        dialogAuthListener(
+                            DialogAuthListener(
+                                userInformation,
+                                "Displaying the information",
+                                true
+                            )
+                        )
                     }
                 })
         };
     }
 
-    fun uploadImage(user: User,filePath : Uri , listener: (AuthListener) -> Unit){
+    fun uploadImage(user: User, filePath: Uri, listener: (AuthListener) -> Unit) {
         val userID = auth.currentUser?.uid
-        //val userMapStore = HashMap<String, String>()
-        if(userID != null) {
+        if (userID != null) {
             if (filePath != null) {
-                val storageRef = FirebaseStorage.getInstance().getReference("myImages/"+ userID.toString()).child("profile")
-                val uploadTask = storageRef?.putFile(filePath!!)
+                val storageRef = FirebaseStorage.getInstance().getReference("myImages/" + userID.toString())
+                        .child("profile")
+                val uploadTask = storageRef.putFile(filePath)
                 uploadTask?.addOnSuccessListener {
                     val downloadUrl = storageRef.downloadUrl
                     downloadUrl.addOnSuccessListener {
+
                         user.profile = it.toString()
-                        listener(AuthListener(true, "Image Uploaded successfully "))
+                        Log.d("URI collection","${user.profile}")
+
+                        if (user.profile != null) {
+                            firebaseFireStore.collection("users").document(userID)
+                                .update("Profile", it.toString())
+                            listener(AuthListener(true,"Image Uploaded successfully "))
+                            Log.d(
+                                "UserAuthServices",
+                                "Image View Created UploadImage ${it.toString()}"
+                            )
+                        } else {
+                            listener(AuthListener(false, "Image Failed to Upload"))
+                        }
                     }
                 }
-            } else {
-                listener(AuthListener(false, "Image Failed to Upload"))
             }
         }
     }
+
+//    fun display(user: User, listener: (DialogAuthListener) -> Unit) {
+//        val userID = auth.currentUser?.uid
+//        var referedImage: User
+//        if (userID != null) {
+//            firebaseFireStore.collection("users").document(userID)
+//                .get()
+//                .addOnCompleteListener {
+//                    if (it.isSuccessful) {
+//                        referedImage = User(
+//                            userId = it.result.getString("UserId").toString(),
+//                            userName = it.result.getString("UserName").toString(),
+//                            email =
+//                            it.result.getString("UserEmail").toString(),
+//                            password =
+//                            it.result.getString("Password").toString(),
+//                            profile = it.result.getString("Profile").toString()
+//                        )
+//                        Log.d(
+//                            "UserAuthServices",
+//                            "Image View Created ReadFireStore ${
+//                                it.result.getString("Profile").toString()
+//                            }"
+//                        )
+//                        listener(
+//                            DialogAuthListener(
+//                                referedImage,
+//                                "Displaying Image",
+//                                true
+//                            )
+//                        )
+//                    }
+//                }
+//        }
+//    }
 }
