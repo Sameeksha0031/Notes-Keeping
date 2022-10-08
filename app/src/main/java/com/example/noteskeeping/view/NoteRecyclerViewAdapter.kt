@@ -19,6 +19,7 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var noteTitle: TextView = itemView.findViewById(R.id.note_title)
+
         var noteContent: TextView = itemView.findViewById(R.id.note_content)
     }
 

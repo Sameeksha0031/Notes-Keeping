@@ -54,12 +54,14 @@ class NoteServices() {
                 .addOnSuccessListener {
                     if(it != null){
                         for(doc in it.documents){
+
                             val notes : Notes? = doc.toObject<Notes>(Notes::class.java)
                             notesList.add(notes!!)
                         }
                         Log.d("NoteService","${notesList.size.toString()}" )
 
                         for(note in notesList){
+
                             Log.d("NoteService","Title is ${note.title}")
                         }
                     }

@@ -46,8 +46,10 @@ class NoteFragment : Fragment() {
         notesViewModel.readnote.observe(viewLifecycleOwner, Observer {
             if (it.status) {
                 recyclerView.adapter = NoteRecyclerViewAdapter(it.noteArrayList)
+
                 Log.d("NoteFragment","${it.noteArrayList.size.toString()}")
                 Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
+
             }
         })
 
