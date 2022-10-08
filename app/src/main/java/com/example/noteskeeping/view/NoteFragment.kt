@@ -20,7 +20,7 @@ class NoteFragment : Fragment() {
     lateinit var binding : FragmentNoteBinding
     private lateinit var recyclerView: RecyclerView
     lateinit var floatingActionButton: FloatingActionButton
-    var recyclerViewManager: RecyclerView.LayoutManager?= null
+    //var recyclerViewManager: RecyclerView.LayoutManager?= null
     private var noteArrayList = ArrayList<Notes>()
     var noteAdapter : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>?=null
     var notesViewModel = NotesViewModel(NoteServices())
@@ -38,20 +38,22 @@ class NoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding =  FragmentNoteBinding.bind(view)
         floatingActionButton = FloatingActionButton(requireContext())
-        //recyclerView = binding.notesList
 
-        recyclerViewManager = LinearLayoutManager(requireContext())
-
-        binding.notesList.layoutManager = recyclerViewManager
+        recyclerView = binding.recyclerView
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+       // recyclerViewManager = LinearLayoutManager(requireContext())
+        //binding.notesList.layoutManager = recyclerViewManager
+        noteArrayList = arrayListOf()
 
         noteAdapter = NoteRecyclerViewAdapter(noteArrayList)
+        recyclerView.adapter = noteAdapter
+        //binding.notesList.adapter = noteAdapter
 
-        binding.notesList.adapter = noteAdapter
-
-        notesViewModel.getNotes(noteArrayList)
+        notesViewModel.getNotes()
         notesViewModel.readnote.observe(viewLifecycleOwner, Observer {
             if(it.status){
                 Toast.makeText(context,"implementation successful",Toast.LENGTH_SHORT).show()
+                recyclerView.adapter = NoteRecyclerViewAdapter(it.noteList)
             }
         })
 

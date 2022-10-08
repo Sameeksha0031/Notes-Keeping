@@ -7,13 +7,14 @@
     app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
     <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/notes_list"
-    android:layout_marginTop="75dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+        android:id="@+id/recycler_View"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="75dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/notes_cardlayout"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_button"

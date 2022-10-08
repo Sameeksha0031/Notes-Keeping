@@ -11,18 +11,16 @@ import com.example.noteskeeping.model.Notes
 
 class NoteRecyclerViewAdapter(private var noteList : ArrayList<Notes>) : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() {
 
+    var allNotes = mutableListOf<Notes>().apply {
+        addAll(noteList)
+        notifyDataSetChanged()
+    }
+
     inner class NoteViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
 
-        var noteContent : TextView = itemView.findViewById(R.id.note_content)
+        val title :TextView = itemView.findViewById(R.id.note_title)
+        val noteContent : TextView = itemView.findViewById(R.id.note_content)
 
-//         init{
-//             noteList = itemView.findViewById(R.id.note_content)
-//
-//             itemView.setOnClickListener{
-//                 val position : Int = adapterPosition
-//                 Toast.makeText(it.context,"you clicked on ${contentInNote[position]}",Toast.LENGTH_SHORT).show()
-//             }
-//         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -31,11 +29,11 @@ class NoteRecyclerViewAdapter(private var noteList : ArrayList<Notes>) : Recycle
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        val notes : Notes = noteList[position]
-        holder.noteContent.text = notes.notes
+        holder.noteContent.text = allNotes[position].notes
+        holder.title.text = allNotes[position].title
     }
 
     override fun getItemCount(): Int {
-        return noteList.size
+        return allNotes.size
     }
 }
