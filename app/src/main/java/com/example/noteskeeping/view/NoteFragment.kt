@@ -18,19 +18,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class NoteFragment : Fragment() {
     lateinit var binding : FragmentNoteBinding
-    private lateinit var recyclerView: RecyclerView
     lateinit var floatingActionButton: FloatingActionButton
-    var recyclerViewManager: RecyclerView.LayoutManager?= null
-    private var noteArrayList = ArrayList<Notes>()
-    var noteAdapter : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>?=null
-    var notesViewModel = NotesViewModel(NoteServices())
+    lateinit var notesViewModel: NotesViewModel
+    lateinit var noteList: ArrayList<Notes>
+    lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_note, container, false)
     }
 
@@ -38,20 +35,17 @@ class NoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding =  FragmentNoteBinding.bind(view)
         floatingActionButton = FloatingActionButton(requireContext())
-        //recyclerView = binding.notesList
+        notesViewModel = NotesViewModel(NoteServices())
 
-        recyclerViewManager = LinearLayoutManager(requireContext())
+        recyclerView = binding.recyclerViewNoteList
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        noteList = arrayListOf()
 
-        binding.notesList.layoutManager = recyclerViewManager
-
-        noteAdapter = NoteRecyclerViewAdapter(noteArrayList)
-
-        binding.notesList.adapter = noteAdapter
-
-        notesViewModel.getNotes(noteArrayList)
+        notesViewModel.getNotes()
         notesViewModel.readnote.observe(viewLifecycleOwner, Observer {
             if(it.status){
-                Toast.makeText(context,"implementation successful",Toast.LENGTH_SHORT).show()
+                recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
+                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
             }
         })
 

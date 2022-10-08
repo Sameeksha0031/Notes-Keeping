@@ -6,6 +6,7 @@ import com.example.noteskeeping.view.NoteRecyclerViewAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 import kotlin.collections.ArrayList
@@ -45,32 +46,23 @@ class NoteServices() {
         }
     }
 
-    fun readNotes(noteList: ArrayList<Notes>,listener: (AuthListener) -> Unit){
+    fun readNotes(listener: (NotesAuthListener) -> Unit){
         val userID = auth.currentUser?.uid
-        noteRecyclerViewAdapter = NoteRecyclerViewAdapter(noteList)
+        var notesList = ArrayList<Notes>()
         if(userID != null){
             firebaseFireStore.collection("users").document(userID)
                 .collection("Notes")
-                .addSnapshotListener(object : EventListener<QuerySnapshot>{
-                    override fun onEvent(
-                        value: QuerySnapshot?,
-                        error: FirebaseFirestoreException?
-                    ) {
-
-                        if(error != null){
-                            Log.d("Firestore Error",error.message.toString())
-                            return
+                .get()
+                .addOnSuccessListener {
+                    if(it != null){
+                        for(doc in it.documents){
+                            val notes : Notes? = doc.toObject<Notes>(Notes::class.java)
+                            notesList.add(notes!!)
                         }
-                        for(dc : DocumentChange in value?.documentChanges!!){
-
-                            if(dc.type == DocumentChange.Type.ADDED){
-                                noteList.add(dc.document.toObject(Notes::class.java))
-                            }
-                        }
-
-                        noteRecyclerViewAdapter.notifyDataSetChanged()
                     }
-                })
+                   // recyclerView.adapter = NoteRecyclerViewAdapter(notesList)
+                }
+            listener(NotesAuthListener(notesList,true,"Data added successfully"))
         }
     }
 }
