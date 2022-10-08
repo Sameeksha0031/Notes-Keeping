@@ -41,13 +41,10 @@ class NoteFragment : Fragment() {
 
         recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-       // recyclerViewManager = LinearLayoutManager(requireContext())
-        //binding.notesList.layoutManager = recyclerViewManager
         noteArrayList = arrayListOf()
 
         noteAdapter = NoteRecyclerViewAdapter(noteArrayList)
-        recyclerView.adapter = noteAdapter
-        //binding.notesList.adapter = noteAdapter
+        recyclerView.adapter = noteAdapter //binding.notesList.adapter = noteAdapter
 
         notesViewModel.getNotes()
         notesViewModel.readnote.observe(viewLifecycleOwner, Observer {
