@@ -58,6 +58,7 @@ class NoteServices() {
                             notesList.add(notes!!)
                         }
                         Log.d("NoteService","${notesList.size.toString()}" )
+
                         for(note in notesList){
                             Log.d("NoteService","Title is ${note.title}")
                         }
