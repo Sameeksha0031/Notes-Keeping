@@ -154,7 +154,8 @@ class UserAuthServices() {
         val userID = auth.currentUser?.uid
         if (userID != null) {
             if (filePath != null) {
-                val storageRef = FirebaseStorage.getInstance().getReference("myImages/" + userID.toString())
+                val storageRef =
+                    FirebaseStorage.getInstance().getReference("myImages/" + userID.toString())
                         .child("profile")
                 val uploadTask = storageRef.putFile(filePath)
                 uploadTask?.addOnSuccessListener {
@@ -162,12 +163,12 @@ class UserAuthServices() {
                     downloadUrl.addOnSuccessListener {
 
                         user.profile = it.toString()
-                        Log.d("URI collection","${user.profile}")
+                        Log.d("URI collection", "${user.profile}")
 
                         if (user.profile != null) {
                             firebaseFireStore.collection("users").document(userID)
                                 .update("Profile", it.toString())
-                            listener(AuthListener(true,"Image Uploaded successfully "))
+                            listener(AuthListener(true, "Image Uploaded successfully "))
                             Log.d(
                                 "UserAuthServices",
                                 "Image View Created UploadImage ${it.toString()}"

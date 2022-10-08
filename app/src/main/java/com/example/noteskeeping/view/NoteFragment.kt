@@ -17,7 +17,7 @@ import com.example.noteskeeping.viewModel.NotesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class NoteFragment : Fragment() {
-    lateinit var binding : FragmentNoteBinding
+    lateinit var binding: FragmentNoteBinding
     lateinit var floatingActionButton: FloatingActionButton
     lateinit var notesViewModel: NotesViewModel
     lateinit var noteList: ArrayList<Notes>
@@ -33,7 +33,7 @@ class NoteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding =  FragmentNoteBinding.bind(view)
+        binding = FragmentNoteBinding.bind(view)
         floatingActionButton = FloatingActionButton(requireContext())
         notesViewModel = NotesViewModel(NoteServices())
 
@@ -43,9 +43,9 @@ class NoteFragment : Fragment() {
 
         notesViewModel.getNotes()
         notesViewModel.readnote.observe(viewLifecycleOwner, Observer {
-            if(it.status){
+            if (it.status) {
                 recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
-                Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
             }
         })
 
