@@ -1,6 +1,7 @@
 package com.example.noteskeeping.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,8 @@ class NoteFragment : Fragment() {
         notesViewModel.getNotes()
         notesViewModel.readnote.observe(viewLifecycleOwner, Observer {
             if (it.status) {
-                recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
+                recyclerView.adapter = NoteRecyclerViewAdapter(it.noteArrayList)
+                Log.d("NoteFragment","${it.noteArrayList.size.toString()}")
                 Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
             }
         })

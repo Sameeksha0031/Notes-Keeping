@@ -14,8 +14,6 @@ import kotlin.collections.HashMap
 
 class NoteServices() {
     private lateinit var auth: FirebaseAuth
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var noteRecyclerViewAdapter: NoteRecyclerViewAdapter
     private lateinit var firebaseFireStore: FirebaseFirestore
     private var firebaseStore: FirebaseStorage? = null
 
@@ -59,10 +57,13 @@ class NoteServices() {
                             val notes : Notes? = doc.toObject<Notes>(Notes::class.java)
                             notesList.add(notes!!)
                         }
+                        Log.d("NoteService","${notesList.size.toString()}" )
+                        for(note in notesList){
+                            Log.d("NoteService","Title is ${note.title}")
+                        }
                     }
-                   // recyclerView.adapter = NoteRecyclerViewAdapter(notesList)
+                    listener(NotesAuthListener(notesList,true,"Data added successfully"))
                 }
-            listener(NotesAuthListener(notesList,true,"Data added successfully"))
         }
     }
 }

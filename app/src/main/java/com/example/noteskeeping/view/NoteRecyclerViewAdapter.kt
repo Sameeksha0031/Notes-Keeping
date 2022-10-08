@@ -24,8 +24,12 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val layerInflater =
-            LayoutInflater.from(parent.context).inflate(R.layout.notes_cardlayout, parent, true)
+            LayoutInflater.from(parent.context).inflate(R.layout.notes_cardlayout, parent, false)
         return NoteViewHolder(layerInflater)
+    }
+
+    override fun getItemCount(): Int {
+        return allNotes.size
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
@@ -34,7 +38,4 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
         holder.noteTitle.text = notes.title.toString()
     }
 
-    override fun getItemCount(): Int {
-        return allNotes.size
-    }
 }
