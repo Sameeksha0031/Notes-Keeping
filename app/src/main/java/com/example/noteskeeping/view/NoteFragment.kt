@@ -58,10 +58,11 @@ class NoteFragment : Fragment() {
         })
 
         floatingActionButton = binding.floatingButton
-        floatingActionButton.setOnClickListener{
-            Toast.makeText(context,"Floating button is click", Toast.LENGTH_SHORT).show()
+        floatingActionButton.setOnClickListener {
+            Toast.makeText(context, "Floating button is click", Toast.LENGTH_SHORT).show()
             val fragment = HomeFragment()
-            fragmentManager?.beginTransaction()?.replace(R.id.home_activity_fragment_container, fragment)?.commit()
+            fragmentManager?.beginTransaction()
+                ?.replace(R.id.home_activity_fragment_container, fragment)?.commit()
         }
     }
 }
