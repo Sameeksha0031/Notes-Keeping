@@ -28,10 +28,7 @@ class HomeActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
     lateinit var toggle: ActionBarDrawerToggle
     lateinit var toolbar: MaterialToolbar
-//    lateinit var floatingActionButton: FloatingActionButton
     lateinit var circleImageView: CircleImageView
-//    var recyclerViewManager: RecyclerView.LayoutManager?= null
-//    var noteAdapter : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,13 +37,8 @@ class HomeActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         toolbar = binding.customToolbar
         setSupportActionBar(toolbar)
-//        floatingActionButton = FloatingActionButton(this)
-        circleImageView = CircleImageView(this)
 
-//        recyclerViewManager = LinearLayoutManager(this)
-//        binding.notesList.layoutManager = recyclerViewManager
-//        noteAdapter = NoteRecyclerViewAdapter()
-//        binding.notesList.adapter = noteAdapter
+        circleImageView = CircleImageView(this)
 
         var drawerLayout: DrawerLayout = binding.drawerLayout
         var navView: NavigationView = binding.navigationView
@@ -102,20 +94,20 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true
-        } else {
-            when (item.itemId) {
-                R.id.search_bar -> return true
-                R.id.profile_pic -> {
-                    Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
-                    return true
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        if (toggle.onOptionsItemSelected(item)) {
+//            return true
+//        } else {
+//            when (item.itemId) {
+//                R.id.search_bar -> return true
+//                R.id.profile_pic -> {
+//                    Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
+//                    return true
+//                }
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
     private fun replaceFragment(homeFragment: Fragment) {
         val supportFragment = supportFragmentManager

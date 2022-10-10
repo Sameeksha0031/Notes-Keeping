@@ -1,6 +1,7 @@
 package com.example.noteskeeping.model
 
 import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.view.NoteRecyclerViewAdapter
 import com.google.firebase.auth.FirebaseAuth
@@ -68,6 +69,19 @@ class NoteServices() {
                         }
                     }
                     listener(NotesAuthListener(notesList,true,"Data added successfully"))
+                }
+        }
+    }
+
+    fun deleteNote(noteId : String ,listener: (AuthListener)->Unit){
+        val userID = auth.currentUser?.uid
+        if(userID != null){
+            firebaseFireStore.collection("users").document(userID)
+                .collection("Notes").document(noteId).delete()
+                .addOnCompleteListener {
+                    if(it.isSuccessful){
+                        listener(AuthListener(true,"User deleted successfully"))
+                    }
                 }
         }
     }

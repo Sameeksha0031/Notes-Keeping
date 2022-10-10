@@ -11,8 +11,10 @@ import com.example.noteskeeping.model.NotesAuthListener
 class NotesViewModel(private var noteServices: NoteServices) : ViewModel(){
     var _NewNotes = MutableLiveData<AuthListener>()
     var _ReadNote = MutableLiveData<NotesAuthListener>()
+    var _DeleteNote = MutableLiveData<AuthListener>()
     var newNotes = _NewNotes as LiveData<AuthListener>
     var readnote = _ReadNote as LiveData<NotesAuthListener>
+    var deleteNote = _DeleteNote as LiveData<AuthListener>
 
     fun createNewNote(notes: Notes){
         noteServices.writeNotes(notes){
@@ -28,5 +30,13 @@ class NotesViewModel(private var noteServices: NoteServices) : ViewModel(){
                  _ReadNote.value = it
              }
          }
+    }
+
+    fun deleteNote(noteId : String){
+        noteServices.deleteNote(noteId){
+            if(it.status){
+                 _DeleteNote.value = it
+            }
+        }
     }
 }
