@@ -28,7 +28,10 @@ class NoteServices() {
         firebaseStore = FirebaseStorage.getInstance()
     }
 
-    fun writeNotes(note: Notes, listener: (AuthListener) -> Unit) {                     ////UUID.randomUUID().toString()
+    fun writeNotes(
+        note: Notes,
+        listener: (AuthListener) -> Unit
+    ) {                     ////UUID.randomUUID().toString()
         val userID = auth.currentUser?.uid
         val noteID = UUID.randomUUID().toString()
         val noteHashMap = HashMap<String, String>()
@@ -45,44 +48,76 @@ class NoteServices() {
         }
     }
 
-    fun readNotes(listener: (NotesAuthListener) -> Unit){
+    fun readNotes(listener: (NotesAuthListener) -> Unit) {
         val userID = auth.currentUser?.uid
         var notesList = ArrayList<Notes>()
-        if(userID != null){
+        if (userID != null) {
             firebaseFireStore.collection("users").document(userID)
                 .collection("Notes")
                 .get()
                 .addOnSuccessListener {
-                    if(it != null){
-                        for(doc in it.documents){
-                            var noteContent : String = doc["Note"].toString()
-                            var noteId : String = doc["NoteID"].toString()
-                            var noteTitle : String = doc["Title"].toString()
-                            var notes = Notes(notes =  noteContent, noteId =  noteId, title = noteTitle)
+                    if (it != null) {
+                        for (doc in it.documents) {
+                            var noteContent: String = doc["Note"].toString()
+                            var noteId: String = doc["NoteID"].toString()
+                            var noteTitle: String = doc["Title"].toString()
+                            var notes =
+                                Notes(notes = noteContent, noteId = noteId, title = noteTitle)
                             notesList.add(notes!!)
                         }
-                        Log.d("NoteService","${notesList.size.toString()}" )
+                        Log.d("NoteService", "${notesList.size.toString()}")
 
-                        for(note in notesList){
+                        for (note in notesList) {
 
-                            Log.d("NoteService","Title is ${note.title}")
+                            Log.d("NoteService", "Title is ${note.title}")
                         }
                     }
-                    listener(NotesAuthListener(notesList,true,"Data added successfully"))
+                    listener(NotesAuthListener(notesList, true, "Data added successfully"))
                 }
         }
     }
 
-    fun deleteNote(noteId : String ,listener: (AuthListener)->Unit){
+    fun deleteNote(noteId: String, listener: (AuthListener) -> Unit) {
         val userID = auth.currentUser?.uid
-        if(userID != null){
+        if (userID != null) {
             firebaseFireStore.collection("users").document(userID)
                 .collection("Notes").document(noteId).delete()
                 .addOnCompleteListener {
-                    if(it.isSuccessful){
-                        listener(AuthListener(true,"User deleted successfully"))
+                    if (it.isSuccessful) {
+                        listener(AuthListener(true, "User deleted successfully"))
                     }
                 }
         }
+    }
+
+    fun editNote(noteId: String, listener: (AuthListener) -> Unit) {
+        val userID = auth.currentUser?.uid
+        var note = Notes()
+        val noteHashMap = HashMap<String, String>()
+        if (userID != null) {
+            noteHashMap["NoteID"] = noteId
+            noteHashMap["Title"] = note.title
+            noteHashMap["Note"] = note.notes
+            firebaseFireStore.collection("users").document(userID)
+                .collection("Notes").whereEqualTo("NoteID", noteId)
+                .get()
+                .addOnSuccessListener {
+                    if (it != null) {
+                        for (doc in it) {
+//                            val noteContent: String = doc["Note"].toString()
+//                            val noteId: String = doc["NoteID"].toString()
+//                            val noteTitle: String = doc["Title"].toString()
+//                            var note =
+//                                Notes(notes = noteContent, noteId = noteId, title = noteTitle)
+                            firebaseFireStore.collection("Notes").document(doc.id).set(
+                                noteHashMap,
+                                SetOptions.merge()
+                            )
+                        }
+                        listener(AuthListener(true, "Note Update"))
+                    }
+                }
+        }
+
     }
 }

@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/sign_out_button"
+            app:layout_constraintBottom_toBottomOf="@+id/update_note"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,10 +37,10 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <Button
-            android:id="@+id/sign_out_button"
+            android:id="@+id/update_note"
             android:layout_width="147dp"
             android:layout_height="39dp"
-            android:text="Sign_out"
+            android:text="Update"
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -84,7 +84,7 @@
             android:text="Save"
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/sign_out_button"
+            app:layout_constraintEnd_toStartOf="@+id/update_note"
             app:layout_constraintHorizontal_bias="0.446"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notes"

@@ -6,6 +6,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.R
@@ -21,6 +22,7 @@ class NoteFragment : Fragment() {
     lateinit var notesViewModel: NotesViewModel
     lateinit var noteList: ArrayList<Notes>
     lateinit var recyclerView: RecyclerView
+    var homeActivity = HomeActivity()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +39,8 @@ class NoteFragment : Fragment() {
         notesViewModel = NotesViewModel(NoteServices())
 
         recyclerView = binding.recyclerViewNoteList
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        //recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView.layoutManager = GridLayoutManager(requireActivity(),2)
        // noteList = arrayListOf()
 
         notesViewModel.getNotes()
@@ -58,15 +61,36 @@ class NoteFragment : Fragment() {
                 ?.replace(R.id.home_activity_fragment_container, fragment)?.commit()
         }
 
-//        notesViewModel.removeNotes()
-//        notesViewModel.remove.Observe(viewLifecycleOwner, Observer {
-//            if(it.status){
-//                reyc
-//            }
-//        })
+        var OperationToBePerform : Int ?= null
+        var noteId : String
+        OperationToBePerform  = arguments?.getInt("perform_deletion")
+        if(OperationToBePerform != null && OperationToBePerform == 1){
+            noteId = arguments?.getString("noteId")!!.toString()
+            notesViewModel.deleteNote(noteId)
+            notesViewModel.deleteNote.observe(viewLifecycleOwner,Observer{
+                if(it.status){
+                    Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+                    recyclerView.adapter?.notifyDataSetChanged()
+                }
+            })
+        }
+
+        OperationToBePerform  = arguments?.getInt("edit_note")
+        if(OperationToBePerform != null && OperationToBePerform == 0){
+            noteId = arguments?.getString("noteId")!!.toString()
+            notesViewModel.editNote(noteId)
+            notesViewModel.noteEdit.observe(viewLifecycleOwner,Observer{
+                if(it.status){
+                    Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+                    recyclerView.adapter?.notifyDataSetChanged()
+                }
+            })
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.notes_menu,menu)
     }
+
 }

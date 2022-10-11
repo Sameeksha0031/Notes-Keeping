@@ -8,15 +8,14 @@
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
+    <item android:id="@+id/grid_linear_view"
+        android:icon="@drawable/ic_baseline_horizontal_split_24"
+        android:title="Linear View"
+        app:showAsAction="always|collapseActionView"/>
+
     <item android:id="@+id/profile_pic"
         android:title="Profile"
         app:showAsAction="always"
         app:actionLayout="@layout/profile_image"/>
-
-    <!-- <item android:id="@+id/orientation"
-        android:icon="@drawable/ic_baseline_search_24"
-        android:title="menu"
-        app:showAsAction="withText"
-        app:actionViewClass="androidx.appcompat.widget.SearchView" /> -->
 
 </menu>

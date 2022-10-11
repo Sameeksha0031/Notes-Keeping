@@ -12,6 +12,8 @@
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.1065" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.136" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.2405" />
+        <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_emoji_objects_24.xml" value="0.1465" />
+        <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_help_outline_24.xml" value="0.1465" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.1765" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_more.xml" value="0.13" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/drawable/ic_baseline_photo_camera_24.xml" value="0.188" />
@@ -37,6 +39,7 @@
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_sign_in.xml" value="0.264" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/fragment_sign_up.xml" value="0.2" />
+        <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/grid_layout.xml" value="0.24094202898550723" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/headerfile.xml" value="0.16" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/nav_header.xml" value="0.2203125" />
         <entry key="..\:/Users/aszkv/AndroidStudioProjects/NotesKeeping/app/src/main/res/layout/notes_cardlayout.xml" value="0.2" />

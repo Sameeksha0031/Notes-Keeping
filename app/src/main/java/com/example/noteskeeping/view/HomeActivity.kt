@@ -81,17 +81,7 @@ class HomeActivity : AppCompatActivity() {
             }
             true
         }
-
-        //replaceFragment(HomeFragment())
         replaceFragment(NoteFragment())
-
-//        floatingActionButton = binding.floatingButton
-//        floatingActionButton.setOnClickListener{
-//            Toast.makeText(this,"Floating button is click",Toast.LENGTH_SHORT).show()
-//            floatingActionButton.hide()
-//            replaceFragment(HomeFragment())
-//        }
-
     }
 
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -100,6 +90,7 @@ class HomeActivity : AppCompatActivity() {
 //        } else {
 //            when (item.itemId) {
 //                R.id.search_bar -> return true
+//                R.id.grid_linear_view -> return true
 //                R.id.profile_pic -> {
 //                    Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
 //                    return true
@@ -130,6 +121,13 @@ class HomeActivity : AppCompatActivity() {
             dialog.show(supportFragmentManager,"custom Dialog")
 
         }
+
+//        val layout = menu?.findItem(R.id.grid_linear_view)
+//        val layoutView = layout.setActionView()
+//        layoutView.setOnClickListener{
+//            replaceFragment(NoteFragment())
+//            Toast.makeText(this,"HomeActivity layout",Toast.LENGTH_SHORT).show()
+//        }
 
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchItem = menu?.findItem(R.id.search_bar)

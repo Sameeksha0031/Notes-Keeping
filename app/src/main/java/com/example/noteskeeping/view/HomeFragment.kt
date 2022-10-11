@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.R
 import com.example.noteskeeping.databinding.FragmentHomeBinding
 import com.example.noteskeeping.model.NoteServices
@@ -25,6 +26,7 @@ class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     lateinit var auth: FirebaseAuth
     lateinit var notesViewModel: NotesViewModel
+    val bundle = Bundle()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,12 +44,27 @@ class HomeFragment : Fragment() {
         notesViewModel = NotesViewModel(NoteServices())
 
 
-        binding.signOutButton.setOnClickListener {
-            auth.signOut()
-            Log.d(TAG, "Sign Out")
-            var intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
-        }
+//        binding.signOutButton.setOnClickListener {
+//            auth.signOut()
+//            Log.d(TAG, "Sign Out")
+//            var intent = Intent(requireContext(), MainActivity::class.java)
+//            startActivity(intent)
+//        }
+
+        binding.updateNote.setOnClickListener{
+            var noteId_getFrom_Adapter = arguments?.getString("noteId")
+            var edit_Operation = arguments?.getInt("edit_note")
+            val fragment = NoteFragment()
+            bundle.putString("noteId",noteId_getFrom_Adapter)
+            bundle.putInt("edit_Operation", edit_Operation!!)
+            fragment.arguments = bundle
+            val transaction = it.context as AppCompatActivity
+            transaction.supportFragmentManager.beginTransaction()
+                .replace(R.id.home_activity_fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+         }
+
 
 
         binding.saveButton.setOnClickListener {

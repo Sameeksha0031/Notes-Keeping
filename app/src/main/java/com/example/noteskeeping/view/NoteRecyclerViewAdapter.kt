@@ -1,5 +1,6 @@
 package com.example.noteskeeping.view
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -54,43 +55,41 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
         val notes: Notes = allNotes[position]
         holder.noteContent.text = notes.notes.toString()
         holder.noteTitle.text = notes.title.toString()
-       var notesViewModel = NotesViewModel(NoteServices())
+        val bundle = Bundle()
 
         holder.menu.setOnClickListener{
             val popup = PopupMenu(it.context, holder.menu)
             popup.inflate(R.menu.notes_menu)
-            //notesViewModel = ViewModelProvider(, NotesViewModelFactory(NoteServices())).get(NotesViewModel::class.java)
+ //           notesViewModel = ViewModelProvider(this, NotesViewModelFactory(NoteServices())).get(NotesViewModel::class.java)
             popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener{
                 override fun onMenuItemClick(item: MenuItem): Boolean {
                     when (item.getItemId()) {
                         R.id.edit_option -> {
-                            val inflater = LayoutInflater.from(it.context).inflate(R.layout.fragment_home,null)
-                            var title = it.findViewById<EditText>(R.id.note_title)
-                            var notes = it.findViewById<EditText>(R.id.note_content)
-
                             val fragment = HomeFragment()
-                            val appCompatActivity = it.context as AppCompatActivity
-                            appCompatActivity.supportFragmentManager.
-                            beginTransaction()
+                            var noteId  : String = notes.noteId
+                            bundle.putString("noteId",noteId)
+                            bundle.putInt("edit_note",0)
+                            fragment.arguments = bundle
+                            val transaction = it.context as AppCompatActivity
+                            transaction.supportFragmentManager.beginTransaction()
                                 .replace(R.id.home_activity_fragment_container, fragment)
                                 .addToBackStack(null)
                                 .commit()
-
-
                             Toast.makeText(it.context,"Edit Text",Toast.LENGTH_SHORT).show()
                             return true
                         }
                         R.id.delete_option -> {
+                            val fragment = NoteFragment()
                             var noteId  : String = notes.noteId
-                            notesViewModel.deleteNote(noteId)
-                            notesViewModel.deleteNote.observe(viewLifecycleOwner, Observer {
-                                if (it.status) {
-                                    recyclerView.adapter = NoteRecyclerViewAdapter(it.noteArrayList)
-                                    //Log.d("NoteFragment","${it.noteArrayList.size.toString()}")
-                                    Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
+                            bundle.putString("noteId",noteId)
+                            bundle.putInt("perform_deletion",1)
+                            fragment.arguments = bundle
+                            val transaction = it.context as AppCompatActivity
+                            transaction.supportFragmentManager.beginTransaction()
+                                .replace(R.id.home_activity_fragment_container, fragment)
+                                .addToBackStack(null)
+                                .commit()
 
-                                }
-                            })
                             Toast.makeText(it.context,"Delete the note ",Toast.LENGTH_SHORT).show()
                             return true
                         }
@@ -101,5 +100,5 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
             popup.show()
         }
 
-    }
+   }
 }
