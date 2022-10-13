@@ -99,16 +99,16 @@ class HomeActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        //return super.onPrepareOptionsMenu(menu)
-        var optionSelected : MenuItem = menu!!.findItem(R.id.grid_linear_view)
-        if(defaultview == 1){
-            optionSelected.setVisible(false)
-        } else{
-            optionSelected.setVisible(true)
-        }
-        return true
-    }
+//    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+//        //return super.onPrepareOptionsMenu(menu)
+//        var optionSelected : MenuItem = menu!!.findItem(R.id.grid_linear_view)
+//        if(defaultview == 1){
+//            optionSelected.setVisible(false)
+//        } else{
+//            optionSelected.setVisible(true)
+//        }
+//        return true
+//    }
 
     private fun replaceFragment(homeFragment: Fragment) {
         val supportFragment = supportFragmentManager
