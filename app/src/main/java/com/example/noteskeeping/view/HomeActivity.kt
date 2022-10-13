@@ -11,13 +11,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.R
 import com.example.noteskeeping.databinding.ActivityHomeBinding
 import com.example.noteskeeping.databinding.ActivityHomeBinding.inflate
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
@@ -84,21 +81,34 @@ class HomeActivity : AppCompatActivity() {
         replaceFragment(NoteFragment())
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        if (toggle.onOptionsItemSelected(item)) {
-//            return true
-//        } else {
-//            when (item.itemId) {
-//                R.id.search_bar -> return true
-//                R.id.grid_linear_view -> return true
-//                R.id.profile_pic -> {
-//                    Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
-//                    return true
-//                }
-//            }
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
+
+    var defaultview : Int ?=null
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.search_bar -> return true
+            R.id.grid_linear_view -> {
+                defaultview = 1
+                //onPrepareOptionsMenu()
+                return true
+            }
+            R.id.profile_pic -> {
+                //Toast.makeText(context, "Profile is selected", Toast.LENGTH_SHORT).show()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        //return super.onPrepareOptionsMenu(menu)
+        var optionSelected : MenuItem = menu!!.findItem(R.id.grid_linear_view)
+        if(defaultview == 1){
+            optionSelected.setVisible(false)
+        } else{
+            optionSelected.setVisible(true)
+        }
+        return true
+    }
 
     private fun replaceFragment(homeFragment: Fragment) {
         val supportFragment = supportFragmentManager
@@ -113,21 +123,14 @@ class HomeActivity : AppCompatActivity() {
 
         var menuItem = menu?.findItem(R.id.profile_pic)
         var view = MenuItemCompat.getActionView(menuItem)
-        var profileImage : CircleImageView = view.findViewById(R.id.profile_image)
+        var profileImage: CircleImageView = view.findViewById(R.id.profile_image)
 
-        profileImage.setOnClickListener{
+        profileImage.setOnClickListener {
             Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
             val dialog = CustomDialogFragment()
-            dialog.show(supportFragmentManager,"custom Dialog")
+            dialog.show(supportFragmentManager, "custom Dialog")
 
         }
-
-//        val layout = menu?.findItem(R.id.grid_linear_view)
-//        val layoutView = layout.setActionView()
-//        layoutView.setOnClickListener{
-//            replaceFragment(NoteFragment())
-//            Toast.makeText(this,"HomeActivity layout",Toast.LENGTH_SHORT).show()
-//        }
 
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchItem = menu?.findItem(R.id.search_bar)

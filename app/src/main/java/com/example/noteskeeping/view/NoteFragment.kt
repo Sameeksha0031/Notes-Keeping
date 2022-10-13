@@ -73,22 +73,23 @@ class NoteFragment : Fragment() {
             })
         }
 
-//        OperationToBePerform  = arguments?.getInt("edit_note")
-//        if(OperationToBePerform != null && OperationToBePerform == 0){
-//            noteId = arguments?.getString("noteId")!!.toString()
-//            notesViewModel.editNote(noteId)
-//            notesViewModel.noteEdit.observe(viewLifecycleOwner,Observer{
-//                if(it.status){
-//                    Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
-//                    recyclerView.adapter?.notifyDataSetChanged()
-//                }
-//            })
-//        }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.notes_menu,menu)
     }
+
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//            when (item.itemId) {
+//                R.id.search_bar -> return true
+//                R.id.grid_linear_view ->{ Toast.makeText(context,"girdview change",Toast.LENGTH_SHORT).show()
+//                    return true}
+//                R.id.profile_pic -> {
+//                    Toast.makeText(context, "Profile is selected", Toast.LENGTH_SHORT).show()
+//                    return true
+//                }
+//            }
+//        return super.onOptionsItemSelected(item)
+//    }
 
 }
