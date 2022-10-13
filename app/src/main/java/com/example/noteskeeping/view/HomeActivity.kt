@@ -82,13 +82,12 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-    var defaultview : Int ?=null
+    var defaultview : Int = 0
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.search_bar -> return true
             R.id.grid_linear_view -> {
-                defaultview = 1
-                //onPrepareOptionsMenu()
+               defaultview++
                 return true
             }
             R.id.profile_pic -> {

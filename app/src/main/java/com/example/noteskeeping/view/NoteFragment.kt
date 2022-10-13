@@ -5,6 +5,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.R
@@ -37,8 +38,13 @@ class NoteFragment : Fragment() {
         notesViewModel = NotesViewModel(NoteServices())
 
         recyclerView = binding.recyclerViewNoteList
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-       // recyclerView.layoutManager = GridLayoutManager(requireActivity(),2)
+
+        var layoutView = arguments?.getString("OptionSlected")
+        if(layoutView == "GridView"){
+            recyclerView.layoutManager = GridLayoutManager(requireActivity(),2)
+        }else{
+            recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        }
        // noteList = arrayListOf()
 
         notesViewModel.getNotes()
