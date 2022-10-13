@@ -1,10 +1,12 @@
 package com.example.noteskeeping.view
 
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,6 +86,15 @@ class CustomDialogFragment : DialogFragment() {
                     Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
                 }
             })
+        }
+
+        binding.logOut.setOnClickListener{
+
+            auth.signOut()
+            Log.d(TAG, "Sign Out")
+            var intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(intent)
+
         }
     }
 

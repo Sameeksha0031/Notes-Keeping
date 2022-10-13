@@ -90,34 +90,38 @@ class NoteServices() {
         }
     }
 
-    fun editNote(noteId: String, listener: (AuthListener) -> Unit) {
-        val userID = auth.currentUser?.uid
-        var note = Notes()
-        val noteHashMap = HashMap<String, String>()
+    fun readSingleNote(noteId: String, listener: (EditNoteAuthListener) -> Unit) {
+        val userID = auth.currentUser?.uid.toString()
         if (userID != null) {
-            noteHashMap["NoteID"] = noteId
-            noteHashMap["Title"] = note.title
-            noteHashMap["Note"] = note.notes
             firebaseFireStore.collection("users").document(userID)
-                .collection("Notes").whereEqualTo("NoteID", noteId)
-                .get()
-                .addOnSuccessListener {
-                    if (it != null) {
-                        for (doc in it) {
-//                            val noteContent: String = doc["Note"].toString()
-//                            val noteId: String = doc["NoteID"].toString()
-//                            val noteTitle: String = doc["Title"].toString()
-//                            var note =
-//                                Notes(notes = noteContent, noteId = noteId, title = noteTitle)
-                            firebaseFireStore.collection("Notes").document(doc.id).set(
-                                noteHashMap,
-                                SetOptions.merge()
-                            )
-                        }
-                        listener(AuthListener(true, "Note Update"))
+                .collection("Notes").document(noteId).get()
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        var note = Notes(
+                            noteId = it.result.getString("NoteID").toString(),
+                            title = it.result.getString("Title").toString(),
+                            notes = it.result.getString("Note").toString()
+                        )
+                        listener(EditNoteAuthListener(note, true, "success"))
                     }
                 }
         }
 
     }
+
+    fun updateSingleNote(note : Notes,noteId: String, listener: (AuthListener) -> Unit) {
+        val userID = auth.currentUser?.uid.toString()
+        val noteHashMap = HashMap<String, String>()
+        noteHashMap["Note"] = note.notes
+        noteHashMap["NoteID"] =  note.noteId
+        noteHashMap["Title"] = note.title
+        firebaseFireStore.collection("users").document(userID).collection("Notes")
+            .document(noteId)
+            .set(noteHashMap)
+            .addOnSuccessListener {
+                listener(AuthListener(true, "note update"))
+            }
+    }
+
 }
+

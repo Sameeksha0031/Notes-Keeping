@@ -1,12 +1,10 @@
 package com.example.noteskeeping.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.R
@@ -39,8 +37,8 @@ class NoteFragment : Fragment() {
         notesViewModel = NotesViewModel(NoteServices())
 
         recyclerView = binding.recyclerViewNoteList
-        //recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.layoutManager = GridLayoutManager(requireActivity(),2)
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+       // recyclerView.layoutManager = GridLayoutManager(requireActivity(),2)
        // noteList = arrayListOf()
 
         notesViewModel.getNotes()
@@ -56,7 +54,7 @@ class NoteFragment : Fragment() {
         floatingActionButton = binding.floatingButton
         floatingActionButton.setOnClickListener {
             Toast.makeText(context, "Floating button is click", Toast.LENGTH_SHORT).show()
-            val fragment = HomeFragment()
+            val fragment = CreatingNotesFragment()
             fragmentManager?.beginTransaction()
                 ?.replace(R.id.home_activity_fragment_container, fragment)?.commit()
         }
@@ -75,17 +73,17 @@ class NoteFragment : Fragment() {
             })
         }
 
-        OperationToBePerform  = arguments?.getInt("edit_note")
-        if(OperationToBePerform != null && OperationToBePerform == 0){
-            noteId = arguments?.getString("noteId")!!.toString()
-            notesViewModel.editNote(noteId)
-            notesViewModel.noteEdit.observe(viewLifecycleOwner,Observer{
-                if(it.status){
-                    Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
-                    recyclerView.adapter?.notifyDataSetChanged()
-                }
-            })
-        }
+//        OperationToBePerform  = arguments?.getInt("edit_note")
+//        if(OperationToBePerform != null && OperationToBePerform == 0){
+//            noteId = arguments?.getString("noteId")!!.toString()
+//            notesViewModel.editNote(noteId)
+//            notesViewModel.noteEdit.observe(viewLifecycleOwner,Observer{
+//                if(it.status){
+//                    Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+//                    recyclerView.adapter?.notifyDataSetChanged()
+//                }
+//            })
+//        }
 
     }
 

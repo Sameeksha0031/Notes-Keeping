@@ -7,14 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.R
-import com.example.noteskeeping.model.NoteServices
 import com.example.noteskeeping.model.Notes
-import com.example.noteskeeping.viewModel.NotesViewModel
-import com.example.noteskeeping.viewModel.NotesViewModelFactory
 
 class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
     RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() {
@@ -65,7 +60,7 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
                 override fun onMenuItemClick(item: MenuItem): Boolean {
                     when (item.getItemId()) {
                         R.id.edit_option -> {
-                            val fragment = HomeFragment()
+                            val fragment = CreatingNotesFragment()
                             var noteId  : String = notes.noteId
                             bundle.putString("noteId",noteId)
                             bundle.putInt("edit_note",0)
