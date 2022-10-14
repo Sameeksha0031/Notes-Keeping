@@ -11,7 +11,7 @@
     <item android:id="@+id/grid_linear_view"
         android:title="Linear View"
         app:showAsAction="always|collapseActionView"
-        android:icon="@drawable/toggle_button_for_changingview"/>
+        android:icon="@drawable/ic_baseline_horizontal_split_24"/>
 
     <item android:id="@+id/profile_pic"
         android:title="Profile"

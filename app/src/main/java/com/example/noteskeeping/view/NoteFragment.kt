@@ -39,12 +39,12 @@ class NoteFragment : Fragment() {
 
         recyclerView = binding.recyclerViewNoteList
 
-        var layoutView = arguments?.getString("OptionSlected")
-        if(layoutView == "GridView"){
-            recyclerView.layoutManager = GridLayoutManager(requireActivity(),2)
-        }else{
+//        var layoutView = arguments?.getString("OptionSelectedForView")
+//        if(layoutView == "1"){
+//            recyclerView.layoutManager = GridLayoutManager(requireActivity(),2)
+//        }else{
             recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        }
+      //  }
        // noteList = arrayListOf()
 
         notesViewModel.getNotes()
@@ -82,20 +82,22 @@ class NoteFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.notes_menu,menu)
+        return
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//            when (item.itemId) {
-//                R.id.search_bar -> return true
-//                R.id.grid_linear_view ->{ Toast.makeText(context,"girdview change",Toast.LENGTH_SHORT).show()
-//                    return true}
-//                R.id.profile_pic -> {
-//                    Toast.makeText(context, "Profile is selected", Toast.LENGTH_SHORT).show()
-//                    return true
-//                }
-//            }
-//        return super.onOptionsItemSelected(item)
-//    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            when (item.itemId) {
+                R.id.search_bar -> return true
+                R.id.grid_linear_view ->{ Toast.makeText(context,"girdview change",Toast.LENGTH_SHORT).show()
+                    return true}
+                R.id.profile_pic -> {
+                    Toast.makeText(context, "Profile is selected", Toast.LENGTH_SHORT).show()
+                    return true
+                }
+            }
+        return super.onOptionsItemSelected(item)
+    }
 
 }

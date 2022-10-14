@@ -26,6 +26,7 @@ class HomeActivity : AppCompatActivity() {
     lateinit var toggle: ActionBarDrawerToggle
     lateinit var toolbar: MaterialToolbar
     lateinit var circleImageView: CircleImageView
+    var bundle = Bundle()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,20 +84,24 @@ class HomeActivity : AppCompatActivity() {
 
 
     var defaultview : Int = 0
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.search_bar -> return true
-            R.id.grid_linear_view -> {
-               defaultview++
-                return true
-            }
-            R.id.profile_pic -> {
-                //Toast.makeText(context, "Profile is selected", Toast.LENGTH_SHORT).show()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.search_bar -> return true
+//            R.id.grid_linear_view -> {
+//               defaultview = 1
+//                bundle.putInt("OptionSelectedForView",defaultview)
+//                val fragment = NoteFragment()
+//                fragment.arguments = bundle
+//                return true
+//            }
+//            R.id.profile_pic -> {
+//                //Toast.makeText(context, "Profile is selected", Toast.LENGTH_SHORT).show()
+//                return true
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
 //    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 //        //return super.onPrepareOptionsMenu(menu)
@@ -128,7 +133,6 @@ class HomeActivity : AppCompatActivity() {
             Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
             val dialog = CustomDialogFragment()
             dialog.show(supportFragmentManager, "custom Dialog")
-
         }
 
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
