@@ -67,6 +67,7 @@ class NoteFragment : Fragment() {
 
         var OperationToBePerform : Int ?= null
         var noteId : String
+
         OperationToBePerform  = arguments?.getInt("perform_deletion")
         if(OperationToBePerform != null && OperationToBePerform == 1){
             noteId = arguments?.getString("noteId")!!.toString()
