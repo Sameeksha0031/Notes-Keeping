@@ -23,11 +23,13 @@ class CustomDialogModel(private var userAuthServices: UserAuthServices) : ViewMo
         }
     }
 
-    fun changeProfileImage(user: User, filePath : Uri){
+    fun changeProfileImage(user: User, filePath: Uri?){
+        if (filePath != null) {
             userAuthServices.uploadImage(user, filePath){
                 if(it.status){
                     _AddProfile.value = it
                 }
             }
+        }
     }
 }

@@ -80,7 +80,7 @@ class CustomDialogFragment : DialogFragment() {
 
         binding.addProfileImage.setOnClickListener{
             val user = User(userId = "", userName = "", email = "", password = "", profile = "")
-            customDialogModel.changeProfileImage(user,filePath!!)
+            customDialogModel.changeProfileImage(user,filePath)
             customDialogModel.profileImage.observe(viewLifecycleOwner, Observer {
                 if(it.status){
                     Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()

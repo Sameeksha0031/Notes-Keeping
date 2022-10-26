@@ -10,4 +10,8 @@
     <item android:title="Delete"
         android:id="@+id/delete_option"
         app:showAsAction="always"/>
+
+    <item android:title="Archeive"
+        android:id="@+id/archeive"
+        app:showAsAction="always"/>
 </menu>

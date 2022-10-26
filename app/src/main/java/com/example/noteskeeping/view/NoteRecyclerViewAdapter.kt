@@ -23,17 +23,15 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
 
         var noteTitle: TextView
         var noteContent: TextView
-        var menu : ImageView
-        lateinit var noteToBeDeleted : String
+        var menu: ImageView
+        lateinit var noteToBeDeleted: String
 
 
-        init{
+        init {
             noteTitle = itemView.findViewById(R.id.note_title)
             noteContent = itemView.findViewById(R.id.note_content)
             menu = itemView.findViewById(R.id.edit_delete_menu)
-            //var notesViewModel = NotesViewModel(NoteServices())
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -88,6 +86,21 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
                             Toast.makeText(it.context,"Delete the note ",Toast.LENGTH_SHORT).show()
                             return true
                         }
+                        R.id.archeive -> {
+                            val fragment = ArchiveNoteFragment()
+                            var noteId  : String = notes.noteId
+                            bundle.putString("noteId",noteId)
+                            bundle.putInt("makeNote_archeive",2)
+                            fragment.arguments = bundle
+                            val transaction = it.context as AppCompatActivity
+                            transaction.supportFragmentManager.beginTransaction()
+                                .replace(R.id.home_activity_fragment_container, fragment)
+                                .addToBackStack(null)
+                                .commit()
+
+                            Toast.makeText(it.context,"Delete the note ",Toast.LENGTH_SHORT).show()
+                            return true
+                        }
                         else -> return false
                     }
                 }
@@ -96,4 +109,9 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
         }
 
    }
+
+    fun filterList(filterList: ArrayList<Notes>){
+        allNotes = filterList.toMutableList()
+        notifyDataSetChanged()
+    }
 }

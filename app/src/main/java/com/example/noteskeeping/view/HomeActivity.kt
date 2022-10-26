@@ -27,8 +27,10 @@ class HomeActivity : AppCompatActivity() {
     lateinit var toolbar: MaterialToolbar
     lateinit var circleImageView: CircleImageView
     var bundle = Bundle()
+    var defaultview : Int = 0
+    val noteFragment = NoteFragment()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) { //make const class take two grid by default -> 1 , linear -> 2 , display
         super.onCreate(savedInstanceState)
         binding = inflate(layoutInflater)
         setContentView(binding.root)
@@ -80,19 +82,21 @@ class HomeActivity : AppCompatActivity() {
             true
         }
         replaceFragment(NoteFragment())
+
+//        bundle.putInt("ByDefaultLinearView",defaultview)
+//        noteFragment.arguments = bundle
+
+
     }
-
-
-    var defaultview : Int = 0
 
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        when (item.itemId) {
 //            R.id.search_bar -> return true
 //            R.id.grid_linear_view -> {
 //               defaultview = 1
-//                bundle.putInt("OptionSelectedForView",defaultview)
-//                val fragment = NoteFragment()
-//                fragment.arguments = bundle
+//                bundle.putInt("GridViewSelected",defaultview)
+//               // val fragment = NoteFragment()
+//                noteFragment.arguments = bundle
 //                return true
 //            }
 //            R.id.profile_pic -> {
@@ -103,16 +107,6 @@ class HomeActivity : AppCompatActivity() {
 //        return super.onOptionsItemSelected(item)
 //    }
 
-//    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-//        //return super.onPrepareOptionsMenu(menu)
-//        var optionSelected : MenuItem = menu!!.findItem(R.id.grid_linear_view)
-//        if(defaultview == 1){
-//            optionSelected.setVisible(false)
-//        } else{
-//            optionSelected.setVisible(true)
-//        }
-//        return true
-//    }
 
     private fun replaceFragment(homeFragment: Fragment) {
         val supportFragment = supportFragmentManager
@@ -121,40 +115,40 @@ class HomeActivity : AppCompatActivity() {
         fragment_Transaction.commit()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.search_menu, menu)
-
-        var menuItem = menu?.findItem(R.id.profile_pic)
-        var view = MenuItemCompat.getActionView(menuItem)
-        var profileImage: CircleImageView = view.findViewById(R.id.profile_image)
-
-        profileImage.setOnClickListener {
-            Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
-            val dialog = CustomDialogFragment()
-            dialog.show(supportFragmentManager, "custom Dialog")
-        }
-
-        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchItem = menu?.findItem(R.id.search_bar)
-        val searchView = searchItem?.actionView as androidx.appcompat.widget.SearchView
-
-        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
-
-        searchView.setOnQueryTextListener(object :
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchView.clearFocus()
-                searchView.setQuery("", false)
-                searchItem.collapseActionView()
-                Toast.makeText(this@HomeActivity, "Looking for $query", Toast.LENGTH_SHORT).show()
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-        })
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        val inflater = menuInflater
+//        inflater.inflate(R.menu.search_menu, menu)
+//
+//        var menuItem = menu?.findItem(R.id.profile_pic)
+//        var view = MenuItemCompat.getActionView(menuItem)
+//        var profileImage: CircleImageView = view.findViewById(R.id.profile_image)
+//
+//        profileImage.setOnClickListener {
+//            Toast.makeText(this, "Profile is selected", Toast.LENGTH_SHORT).show()
+//            val dialog = CustomDialogFragment()
+//            dialog.show(supportFragmentManager, "custom Dialog")
+//        }
+//
+//        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        val searchItem = menu?.findItem(R.id.search_bar)
+//        val searchView = searchItem?.actionView as androidx.appcompat.widget.SearchView
+//
+//        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
+//
+//        searchView.setOnQueryTextListener(object :
+//            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                searchView.clearFocus()
+//                searchView.setQuery("", false)
+//                searchItem.collapseActionView()
+//                Toast.makeText(this@HomeActivity, "Looking for $query", Toast.LENGTH_SHORT).show()
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return false
+//            }
+//        })
+//        return true
+//    }
 }

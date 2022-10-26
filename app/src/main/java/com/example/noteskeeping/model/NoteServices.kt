@@ -1,19 +1,15 @@
 package com.example.noteskeeping.model
 
 import android.util.Log
-import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
-import com.example.noteskeeping.view.NoteRecyclerViewAdapter
+import com.example.noteskeeping.database.DataBaseHelper
+import com.example.noteskeeping.utility.NetworkConnectivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class NoteServices() {
+class NoteServices(var dataBaseHelper: DataBaseHelper) {
     private lateinit var auth: FirebaseAuth
     private lateinit var firebaseFireStore: FirebaseFirestore
     private var firebaseStore: FirebaseStorage? = null
@@ -28,29 +24,56 @@ class NoteServices() {
         firebaseStore = FirebaseStorage.getInstance()
     }
 
-    fun writeNotes(
-        note: Notes,
-        listener: (AuthListener) -> Unit
-    ) {                     ////UUID.randomUUID().toString()
+
+//    fun writeNotes(
+//        note: Notes,
+//        listener: (AuthListener) -> Unit
+//    ) {                     ////UUID.randomUUID().toString()
+//        val userID = auth.currentUser?.uid
+//        val noteID = UUID.randomUUID().toString()
+//        val noteHashMap = HashMap<String, String>()
+//        if (userID != null) {
+//            noteHashMap["NoteID"] = noteID
+//            noteHashMap["Title"] = note.title
+//            noteHashMap["Note"] = note.notes
+//            firebaseFireStore.collection("users").document(userID).collection("Notes")
+//                .document(noteID)
+//                .set(noteHashMap)
+//                .addOnSuccessListener {
+//                    dataBaseHelper.addNotes(note,noteID)
+//                    listener(AuthListener(true, "note added successfully"))
+//                }
+//        }
+//    }
+
+    fun writeNotes(note: Notes, listener: (AuthListener) -> Unit) {                     ////UUID.randomUUID().toString()
         val userID = auth.currentUser?.uid
-        val noteID = UUID.randomUUID().toString()
+        // val noteID = UUID.randomUUID().toString()
         val noteHashMap = HashMap<String, String>()
         if (userID != null) {
-            noteHashMap["NoteID"] = noteID
+           // noteHashMap["NoteID"] = note.noteId
             noteHashMap["Title"] = note.title
             noteHashMap["Note"] = note.notes
-            firebaseFireStore.collection("users").document(userID).collection("Notes")
-                .document(noteID)
-                .set(noteHashMap)
-                .addOnSuccessListener {
-                    listener(AuthListener(true, "note update"))
-                }
+            var documentReference = firebaseFireStore.collection("users").document(userID).collection("Notes")
+                    .document()
+            note.noteId = documentReference.id
+            noteHashMap["NoteID"] = note.noteId
+                documentReference.set(noteHashMap).addOnSuccessListener {
+
+                            var noteId = note.noteId
+                            firebaseFireStore.collection("users").document(userID).collection("Notes")
+                                .document(noteId).set(noteHashMap)
+                            dataBaseHelper.addNotes(note,noteId)
+                            listener(AuthListener(true, "note added successfully"))
+
+                    }
         }
     }
 
-    fun readNotes(listener: (NotesAuthListener) -> Unit) {
+    fun readNotes(listener: (SearchAuthListener) -> Unit) {
         val userID = auth.currentUser?.uid
         var notesList = ArrayList<Notes>()
+        var searchNoteList = ArrayList<String>()
         if (userID != null) {
             firebaseFireStore.collection("users").document(userID)
                 .collection("Notes")
@@ -64,6 +87,8 @@ class NoteServices() {
                             var notes =
                                 Notes(notes = noteContent, noteId = noteId, title = noteTitle)
                             notesList.add(notes!!)
+                            searchNoteList.add(noteContent)
+                            searchNoteList.add(noteTitle)
                         }
                         Log.d("NoteService", "${notesList.size.toString()}")
 
@@ -72,7 +97,8 @@ class NoteServices() {
                             Log.d("NoteService", "Title is ${note.title}")
                         }
                     }
-                    listener(NotesAuthListener(notesList, true, "Data added successfully"))
+                    //dataBaseHelper.getALLNotes()
+                    listener(SearchAuthListener(notesList,searchNoteList, true, "Getting Notes.... "))
                 }
         }
     }
@@ -84,6 +110,7 @@ class NoteServices() {
                 .collection("Notes").document(noteId).delete()
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
+                       // dataBaseHelper.deleteUser(noteId)
                         listener(AuthListener(true, "User deleted successfully"))
                     }
                 }
@@ -98,10 +125,11 @@ class NoteServices() {
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         var note = Notes(
+                            notes = it.result.getString("Note").toString(),
                             noteId = it.result.getString("NoteID").toString(),
-                            title = it.result.getString("Title").toString(),
-                            notes = it.result.getString("Note").toString()
+                            title = it.result.getString("Title").toString()
                         )
+                       // dataBaseHelper.getSingleNote(noteId)
                         listener(EditNoteAuthListener(note, true, "success"))
                     }
                 }
@@ -109,16 +137,17 @@ class NoteServices() {
 
     }
 
-    fun updateSingleNote(note : Notes,noteId: String, listener: (AuthListener) -> Unit) {
+    fun updateSingleNote(note: Notes, noteId: String, listener: (AuthListener) -> Unit) {
         val userID = auth.currentUser?.uid.toString()
         val noteHashMap = HashMap<String, String>()
         noteHashMap["Note"] = note.notes
-        noteHashMap["NoteID"] =  note.noteId
+        noteHashMap["NoteID"] = note.noteId
         noteHashMap["Title"] = note.title
         firebaseFireStore.collection("users").document(userID).collection("Notes")
             .document(noteId)
             .set(noteHashMap)
             .addOnSuccessListener {
+                //dataBaseHelper.updateTask(note, noteId)
                 listener(AuthListener(true, "note update"))
             }
     }

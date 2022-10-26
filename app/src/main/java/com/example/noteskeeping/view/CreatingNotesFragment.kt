@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.noteskeeping.R
+import com.example.noteskeeping.database.DataBaseHelper
 import com.example.noteskeeping.databinding.FragmentHomeBinding
 import com.example.noteskeeping.model.NoteServices
 import com.example.noteskeeping.model.Notes
@@ -22,7 +23,7 @@ class CreatingNotesFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     lateinit var auth: FirebaseAuth
     lateinit var notesViewModel: NotesViewModel
-    val bundle = Bundle()
+    //private var dataBaseHelper : DataBaseHelper ? =null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,15 +38,7 @@ class CreatingNotesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
         auth = FirebaseAuth.getInstance()
-        notesViewModel = NotesViewModel(NoteServices())
-
-
-//        binding.signOutButton.setOnClickListener {
-//            auth.signOut()
-//            Log.d(TAG, "Sign Out")
-//            var intent = Intent(requireContext(), MainActivity::class.java)
-//            startActivity(intent)
-//        }
+        notesViewModel = NotesViewModel(NoteServices(DataBaseHelper(requireContext())))
 
         var noteId_getFrom_Adapter = arguments?.getString("noteId")
         var edit_Operation = arguments?.getInt("edit_note")
@@ -56,9 +49,6 @@ class CreatingNotesFragment : Fragment() {
 
 
         binding.updateNote.setOnClickListener{
-//            bundle.putString("noteId",noteId_getFrom_Adapter)
-//            bundle.putInt("edit_Operation", edit_Operation!!)
-//            fragment.arguments = bundle
             updateNote(noteId_getFrom_Adapter)
             val fragment = NoteFragment()
             val transaction = it.context as AppCompatActivity
@@ -71,7 +61,7 @@ class CreatingNotesFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             val noteTitle = binding.title.text.toString().trim()
             val newNote = binding.notes.text.toString().trim()
-            val notes = Notes(noteId = "", title = noteTitle, notes = newNote)
+            val notes = Notes(notes = newNote,noteId = "", title = noteTitle )
 
             notesViewModel.createNewNote(notes)
             notesViewModel.newNotes.observe(viewLifecycleOwner, Observer {
@@ -79,6 +69,10 @@ class CreatingNotesFragment : Fragment() {
                     Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
                     val fragment = NoteFragment()
                     val transaction = context as AppCompatActivity
+                    var bundle = Bundle()
+                    bundle.putString("title",noteTitle)
+                    bundle.putString("content",newNote)
+                    fragment.arguments = bundle
                     transaction.supportFragmentManager.beginTransaction()
                         .replace(R.id.home_activity_fragment_container, fragment)
                         .addToBackStack(null)
@@ -88,6 +82,7 @@ class CreatingNotesFragment : Fragment() {
                 }
             })
         }
+
 
     }
 
@@ -109,7 +104,7 @@ class CreatingNotesFragment : Fragment() {
     fun updateNote(noteId_getFrom_Adapter: String?){
         val noteTitle = binding.title.text.toString().trim()
         val newNote = binding.notes.text.toString().trim()
-        val note = Notes(noteId = noteId_getFrom_Adapter.toString(), title = noteTitle, notes = newNote)
+        val note = Notes(notes = newNote,noteId = noteId_getFrom_Adapter.toString(), title = noteTitle, )
 
         if (noteId_getFrom_Adapter != null) {
             notesViewModel.updateSingleNote(note,noteId_getFrom_Adapter)
