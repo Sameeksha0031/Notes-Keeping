@@ -28,7 +28,7 @@ class NoteFragment : Fragment() {
     lateinit var notesViewModel: NotesViewModel
     lateinit var noteList: ArrayList<Notes> //
     lateinit var recyclerView: RecyclerView
-    lateinit var noteAdapter : ArrayAdapter<String>
+    //lateinit var noteAdapter : ArrayAdapter<String>
     lateinit var noteRecyclerViewAdapter: NoteRecyclerViewAdapter //
     var currentViewMode : Int = 0
     val viewModeListView : Int = 0
@@ -72,7 +72,7 @@ class NoteFragment : Fragment() {
 //        }
 
         removeNote()
-
+        puttingNoteInArchiev()
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -80,9 +80,9 @@ class NoteFragment : Fragment() {
 //        inflater.inflate(R.menu.notes_menu,menu)
 //        return
 //    }
-
+    var OperationToBePerform : Int ?= null
     fun removeNote(){
-        var OperationToBePerform : Int ?= null
+       // var OperationToBePerform : Int ?= null
         var noteId : String
         OperationToBePerform  = arguments?.getInt("perform_deletion")
         if(OperationToBePerform != null && OperationToBePerform == 1){
@@ -104,8 +104,6 @@ class NoteFragment : Fragment() {
                 recyclerView.adapter = NoteRecyclerViewAdapter(it.noteArrayList)
                 Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
                 noteList = it.noteArrayList
-                noteAdapter =
-                    ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,noteList)
             }
         })
     }
@@ -157,26 +155,25 @@ class NoteFragment : Fragment() {
         searchView.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                searchView.clearFocus()
-                searchView.setQuery("", false)
-                searchItem.collapseActionView()
-                Toast.makeText(context, "Looking for $query", Toast.LENGTH_SHORT).show()
-//                if(noteList.contains(query)){
-//                   noteList.filter {
-//
-//                   }
-//                }
-                return false
+//                searchView.clearFocus()
+//                searchView.setQuery("", false)
+//                searchItem.collapseActionView()
+//                Toast.makeText(context, "Looking for $query", Toast.LENGTH_SHORT).show()
+////                if(noteList.contains(query)){
+////                   noteList.filter {
+////
+////                   }
+////                }
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-                    filter(newText)
-                }
-                return false
+               recyclerView.adapter = noteRecyclerViewAdapter
+                noteRecyclerViewAdapter.filter.filter(newText)
+                return true
             }
         })
-        //return true
+        return super.onCreateOptionsMenu(menu, inflater)
     }
 
     fun switchView(menuItem: MenuItem){
@@ -189,19 +186,33 @@ class NoteFragment : Fragment() {
         }
     }
 
-    fun filter(text : String){
-        var filteredList =  ArrayList<Notes>()
-        Log.d("NoteFragment","${noteList.size}")
-         for(item in noteList){
-             if(item.notes.toLowerCase(Locale.getDefault()).contains(text.toLowerCase())){
-                 filteredList.add(item)
-             }
-         }
-        if(filteredList.isEmpty()){
-            Toast.makeText(requireContext(),"No Data Found...",Toast.LENGTH_SHORT).show()
-        }else{
-            noteRecyclerViewAdapter.filterList(filteredList)
-            recyclerView.adapter?.notifyDataSetChanged()
+    fun puttingNoteInArchiev(){
+        var archive = ArrayList<Notes>()
+        var noteId = arguments?.get("noteId")
+        OperationToBePerform = arguments?.getInt("makenote_archive")
+        if(OperationToBePerform != null && OperationToBePerform == 2){
+            notesViewModel.readSingleNote(noteId as String)
+            notesViewModel.readSingleNote.observe(viewLifecycleOwner , Observer {
+                if(it.status){
+                   // it.notes.
+                }
+            })
         }
     }
+
+//    fun filter(text : String){
+//        var filteredList =  ArrayList<Notes>()
+//        Log.d("NoteFragment","${noteList.size}")
+//         for(item in noteList){
+//             if(item.notes.toLowerCase(Locale.getDefault()).contains(text.toLowerCase())){
+//                 filteredList.add(item)
+//             }
+//         }
+//        if(filteredList.isEmpty()){
+//            Toast.makeText(requireContext(),"No Data Found...",Toast.LENGTH_SHORT).show()
+//        }else{
+//            noteRecyclerViewAdapter.filterList(filteredList)
+//            recyclerView.adapter?.notifyDataSetChanged()
+//        }
+//    }
 }

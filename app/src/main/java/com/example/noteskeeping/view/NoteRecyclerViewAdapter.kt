@@ -12,13 +12,14 @@ import com.example.noteskeeping.R
 import com.example.noteskeeping.model.Notes
 
 class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
-    RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() {
+    RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() , Filterable {
 
+    private var searchNoteList : ArrayList<Notes> = arrayListOf()
     var allNotes = mutableListOf<Notes>().apply {
         addAll(noteList)
         notifyDataSetChanged()
     }
-
+//    lateinit var searchNoteList : List<Notes>
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var noteTitle: TextView
@@ -31,6 +32,7 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
             noteTitle = itemView.findViewById(R.id.note_title)
             noteContent = itemView.findViewById(R.id.note_content)
             menu = itemView.findViewById(R.id.edit_delete_menu)
+//            searchNoteList = noteList
         }
     }
 
@@ -87,7 +89,7 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
                             return true
                         }
                         R.id.archeive -> {
-                            val fragment = ArchiveNoteFragment()
+                            val fragment = NoteFragment()
                             var noteId  : String = notes.noteId
                             bundle.putString("noteId",noteId)
                             bundle.putInt("makeNote_archeive",2)
@@ -110,8 +112,39 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
 
    }
 
-    fun filterList(filterList: ArrayList<Notes>){
-        allNotes = filterList.toMutableList()
-        notifyDataSetChanged()
+    override fun getFilter(): Filter {
+        searchNoteList = noteList
+       var filter = object : Filter(){
+           override fun performFiltering(p0: CharSequence?): FilterResults {
+               var filterResults = FilterResults()
+               if(p0 == null || p0.isEmpty()){
+                   filterResults.values = searchNoteList
+                   filterResults.count = searchNoteList.size
+               }else{
+                   var searchChar = p0.toString().toLowerCase()
+                   var filteredResults = ArrayList<Notes>()
+                   for(noteModel in searchNoteList){
+                       if(noteModel.notes.toLowerCase().contains(searchChar) || noteModel.title.toLowerCase().contains(searchChar)){
+                           filteredResults.add(noteModel)
+                       }
+                   }
+                   filterResults.values = filteredResults
+                   filterResults.count = filteredResults.size
+               }
+               return filterResults
+           }
+
+           override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
+               searchNoteList = p1?.values!! as ArrayList<Notes> /* = java.util.ArrayList<com.example.noteskeeping.model.Notes> */
+               notifyDataSetChanged()
+           }
+       }
+        return filter
     }
+
+//    fun filterList(filterList: ArrayList<Notes>){
+//        allNotes = filterList.toMutableList()
+//        notifyDataSetChanged()
+//    }
+
 }
