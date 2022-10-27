@@ -194,7 +194,7 @@ class NoteFragment : Fragment() {
             notesViewModel.readSingleNote(noteId as String)
             notesViewModel.readSingleNote.observe(viewLifecycleOwner , Observer {
                 if(it.status){
-                   // it.notes.
+                   // it.notes
                 }
             })
         }
