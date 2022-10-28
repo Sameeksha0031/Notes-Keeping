@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
@@ -31,9 +32,8 @@ class NoteFragment : Fragment() {
     lateinit var notesViewModel: NotesViewModel
     lateinit var noteList: ArrayList<Notes> //
     lateinit var filteredList : ArrayList<Notes>
-    lateinit var archiveNoteList : ArrayList<Notes>
+    lateinit var archiveList : ArrayList<Notes>
     lateinit var recyclerView: RecyclerView
-   // lateinit var noteRecyclerViewAdapter: NoteRecyclerViewAdapter //
     var currentViewMode : Int = 0
     val viewModeListView : Int = 0
     val viewModeGridView : Int = 1
@@ -55,6 +55,7 @@ class NoteFragment : Fragment() {
         recyclerView = binding.recyclerViewNoteList
         noteList = ArrayList<Notes>() //
         filteredList = ArrayList<Notes>()
+        archiveList = ArrayList<Notes>()
         //noteRecyclerViewAdapter = NoteRecyclerViewAdapter(noteList) //
         recyclerView.setHasFixedSize(true)
 
@@ -70,8 +71,35 @@ class NoteFragment : Fragment() {
                 ?.replace(R.id.home_activity_fragment_container, fragment)?.commit()
         }
 
+        val isArchive = arguments?.get("add_note_to_archive")
+        if(isArchive != null && isArchive == 2){
+            val noteId = arguments?.getString("noteId")!!.toString()
+            var note : Notes
+            notesViewModel.readSingleNote(noteId)
+            notesViewModel.readSingleNote.observe(viewLifecycleOwner, Observer {
+                if(it.status){
+                    note = Notes(notes = it.notes.notes, noteId = it.notes.noteId, title = it.notes.title, isArchive = true)
+                    notesViewModel.updateSingleNote(note,noteId)
+                    notesViewModel.updateSingleNote.observe(viewLifecycleOwner,Observer{
+                        if(it.status){
+                           // Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+                            archiveList.add(note)
+                            Toast.makeText(context,"Note add to Archive",Toast.LENGTH_SHORT).show()
+                            recyclerView.adapter = NoteRecyclerViewAdapter(archiveList)
+                        }
+                    })
+                }
+            })
+//            notesViewModel.updateSingleNote(note,noteId)
+//            notesViewModel.updateSingleNote.observe(viewLifecycleOwner,Observer{
+//                if(it.status){
+//                    Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+//                    recyclerView.adapter?.notifyDataSetChanged()
+//                }
+//            })
+        }
+
         removeNote()
-        //puttingNoteInArchiev()
     }
 
     var OperationToBePerform : Int ?= null
@@ -92,14 +120,16 @@ class NoteFragment : Fragment() {
     }
 
     fun displayAllNotesInRecyclerView(){
+        var note = Notes()
         notesViewModel.getNotes()
         notesViewModel.readNote.observe(viewLifecycleOwner, Observer {
             if (it.status) {
-                noteList = it.noteArrayList
-                filteredList.addAll(noteList)
-                recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
-                Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
-             // noteRecyclerViewAdapter = NoteRecyclerViewAdapter(it.noteArrayList)
+                if(note.isArchive == false){
+                    noteList = it.noteArrayList
+                    filteredList.addAll(noteList)
+                    recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
+                    Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
+                }
             }
         })
     }
@@ -121,7 +151,6 @@ class NoteFragment : Fragment() {
                 return true
             }
             R.id.profile_pic -> {
-                //Toast.makeText(context, "Profile is selected", Toast.LENGTH_SHORT).show()
                 return true
             }
         }
@@ -142,11 +171,8 @@ class NoteFragment : Fragment() {
             dialog.show(childFragmentManager, "custom Dialog")
         }
 
-        //val manager = getSystemService(requireContext(),Ser) as SearchManager
         val searchItem = menu?.findItem(R.id.search_bar)
         val searchView = searchItem?.actionView as androidx.appcompat.widget.SearchView
-
-        //searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
 
         searchView.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
@@ -184,21 +210,7 @@ class NoteFragment : Fragment() {
         }
     }
 
-    fun puttingNoteInArchiev(notes: Notes){
-        if(notes.noteIsArchive == true){
-            noteList.remove(notes)
-            archiveNoteList.add(notes)
-        }
-        var archive = ArrayList<Notes>()
-        var noteId = arguments?.get("noteId")
-        OperationToBePerform = arguments?.getInt("makenote_archive")
-        if(OperationToBePerform != null && OperationToBePerform == 2){
-            notesViewModel.readSingleNote(noteId as String)
-            notesViewModel.readSingleNote.observe(viewLifecycleOwner , Observer {
-                if(it.status){
-                   // it.notes
-                }
-            })
-        }
+    fun checkArchive(){
+
     }
 }

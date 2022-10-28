@@ -15,25 +15,22 @@ import com.example.noteskeeping.model.Notes
 class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
     RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>(){
 
-    private var archiveNoteList : ArrayList<Notes> = arrayListOf()
+    //private var archiveNoteList : ArrayList<Notes> = arrayListOf()
     var allNotes = mutableListOf<Notes>().apply {
         addAll(noteList)
         notifyDataSetChanged()
     }
-//    lateinit var searchNoteList : List<Notes>
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var noteTitle: TextView
         var noteContent: TextView
         var menu: ImageView
-        lateinit var noteToBeDeleted: String
 
 
         init {
             noteTitle = itemView.findViewById(R.id.note_title)
             noteContent = itemView.findViewById(R.id.note_content)
             menu = itemView.findViewById(R.id.edit_delete_menu)
-//            searchNoteList = noteList
         }
     }
 
@@ -91,18 +88,18 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
                         }
                         R.id.archeive -> {
                             val fragment = NoteFragment()
-                            //var noteId  : String = notes.noteId
-                            notes.noteIsArchive = true
-//                            archiveNoteList.add(notes)
-//                            bundle.putInt("makeNote_archeive",2)
-//                            fragment.arguments = bundle
-//                            val transaction = it.context as AppCompatActivity
-//                            transaction.supportFragmentManager.beginTransaction()
-//                                .replace(R.id.home_activity_fragment_container, fragment)
-//                                .addToBackStack(null)
-//                                .commit()
-
-                            Toast.makeText(it.context,"Note add to Archive",Toast.LENGTH_SHORT).show()
+                            var noteId  : String = notes.noteId
+                            bundle.putString("noteId",noteId)
+                            bundle.putInt("add_note_to_archive",2)
+                            fragment.arguments = bundle
+                            val transaction = it.context as AppCompatActivity
+                            transaction.supportFragmentManager.beginTransaction()
+                                .replace(R.id.home_activity_fragment_container, fragment)
+                                .addToBackStack(null)
+                                .commit()
+                            //Log.d("Adapter","allNotes - $allNotes")
+                            //Log.d("Adapter","allNotes - $archiveNoteList")
+//                            Toast.makeText(it.context,"Note add to Archive",Toast.LENGTH_SHORT).show()
                             return true
                         }
                         else -> return false

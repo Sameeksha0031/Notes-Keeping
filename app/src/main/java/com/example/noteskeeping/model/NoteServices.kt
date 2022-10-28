@@ -143,6 +143,7 @@ class NoteServices(var dataBaseHelper: DataBaseHelper) {
         noteHashMap["Note"] = note.notes
         noteHashMap["NoteID"] = note.noteId
         noteHashMap["Title"] = note.title
+        noteHashMap["Archive Status"] = note.isArchive.toString()
         firebaseFireStore.collection("users").document(userID).collection("Notes")
             .document(noteId)
             .set(noteHashMap)
