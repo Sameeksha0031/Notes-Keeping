@@ -1,6 +1,7 @@
 package com.example.noteskeeping.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -12,9 +13,9 @@ import com.example.noteskeeping.R
 import com.example.noteskeeping.model.Notes
 
 class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
-    RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() , Filterable {
+    RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>(){
 
-    private var searchNoteList : ArrayList<Notes> = arrayListOf()
+    private var archiveNoteList : ArrayList<Notes> = arrayListOf()
     var allNotes = mutableListOf<Notes>().apply {
         addAll(noteList)
         notifyDataSetChanged()
@@ -90,17 +91,18 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
                         }
                         R.id.archeive -> {
                             val fragment = NoteFragment()
-                            var noteId  : String = notes.noteId
-                            bundle.putString("noteId",noteId)
-                            bundle.putInt("makeNote_archeive",2)
-                            fragment.arguments = bundle
-                            val transaction = it.context as AppCompatActivity
-                            transaction.supportFragmentManager.beginTransaction()
-                                .replace(R.id.home_activity_fragment_container, fragment)
-                                .addToBackStack(null)
-                                .commit()
+                            //var noteId  : String = notes.noteId
+                            notes.noteIsArchive = true
+//                            archiveNoteList.add(notes)
+//                            bundle.putInt("makeNote_archeive",2)
+//                            fragment.arguments = bundle
+//                            val transaction = it.context as AppCompatActivity
+//                            transaction.supportFragmentManager.beginTransaction()
+//                                .replace(R.id.home_activity_fragment_container, fragment)
+//                                .addToBackStack(null)
+//                                .commit()
 
-                            Toast.makeText(it.context,"Delete the note ",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(it.context,"Note add to Archive",Toast.LENGTH_SHORT).show()
                             return true
                         }
                         else -> return false
@@ -111,40 +113,5 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
         }
 
    }
-
-    override fun getFilter(): Filter {
-        searchNoteList = noteList
-       var filter = object : Filter(){
-           override fun performFiltering(p0: CharSequence?): FilterResults {
-               var filterResults = FilterResults()
-               if(p0 == null || p0.isEmpty()){
-                   filterResults.values = searchNoteList
-                   filterResults.count = searchNoteList.size
-               }else{
-                   var searchChar = p0.toString().toLowerCase()
-                   var filteredResults = ArrayList<Notes>()
-                   for(noteModel in searchNoteList){
-                       if(noteModel.notes.toLowerCase().contains(searchChar) || noteModel.title.toLowerCase().contains(searchChar)){
-                           filteredResults.add(noteModel)
-                       }
-                   }
-                   filterResults.values = filteredResults
-                   filterResults.count = filteredResults.size
-               }
-               return filterResults
-           }
-
-           override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
-               searchNoteList = p1?.values!! as ArrayList<Notes> /* = java.util.ArrayList<com.example.noteskeeping.model.Notes> */
-               notifyDataSetChanged()
-           }
-       }
-        return filter
-    }
-
-//    fun filterList(filterList: ArrayList<Notes>){
-//        allNotes = filterList.toMutableList()
-//        notifyDataSetChanged()
-//    }
 
 }
