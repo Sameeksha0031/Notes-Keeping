@@ -22,7 +22,7 @@ class DataBaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
 
     override fun onCreate(p0: SQLiteDatabase?) {
         val CREATE_TABLE =
-            "CREATE TABLE $TABLE_NAME ($NOTE_ID TEXT PRIMARY KEY AUTOINCREMENT, $NOTE_TITLE TEXT,$NOTE TEXT)"
+            "CREATE TABLE $TABLE_NAME ($NOTE_ID TEXT PRIMARY KEY , $NOTE_TITLE TEXT,$NOTE TEXT)"
         p0?.execSQL(CREATE_TABLE)
     }
 

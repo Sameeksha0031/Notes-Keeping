@@ -24,28 +24,6 @@ class NoteServices(var dataBaseHelper: DataBaseHelper) {
         firebaseStore = FirebaseStorage.getInstance()
     }
 
-
-//    fun writeNotes(
-//        note: Notes,
-//        listener: (AuthListener) -> Unit
-//    ) {                     ////UUID.randomUUID().toString()
-//        val userID = auth.currentUser?.uid
-//        val noteID = UUID.randomUUID().toString()
-//        val noteHashMap = HashMap<String, String>()
-//        if (userID != null) {
-//            noteHashMap["NoteID"] = noteID
-//            noteHashMap["Title"] = note.title
-//            noteHashMap["Note"] = note.notes
-//            firebaseFireStore.collection("users").document(userID).collection("Notes")
-//                .document(noteID)
-//                .set(noteHashMap)
-//                .addOnSuccessListener {
-//                    dataBaseHelper.addNotes(note,noteID)
-//                    listener(AuthListener(true, "note added successfully"))
-//                }
-//        }
-//    }
-
     fun writeNotes(note: Notes, listener: (AuthListener) -> Unit) {                     ////UUID.randomUUID().toString()
         val userID = auth.currentUser?.uid
         // val noteID = UUID.randomUUID().toString()
@@ -54,6 +32,7 @@ class NoteServices(var dataBaseHelper: DataBaseHelper) {
            // noteHashMap["NoteID"] = note.noteId
             noteHashMap["Title"] = note.title
             noteHashMap["Note"] = note.notes
+            noteHashMap["ArchiveStatus"] = note.isArchive.toString()
             var documentReference = firebaseFireStore.collection("users").document(userID).collection("Notes")
                     .document()
             note.noteId = documentReference.id
@@ -84,11 +63,10 @@ class NoteServices(var dataBaseHelper: DataBaseHelper) {
                             var noteContent: String = doc["Note"].toString()
                             var noteId: String = doc["NoteID"].toString()
                             var noteTitle: String = doc["Title"].toString()
+                            var archive : String = doc["ArchiveStatus"].toString()
                             var notes =
-                                Notes(notes = noteContent, noteId = noteId, title = noteTitle)
+                                Notes(notes = noteContent, noteId = noteId, title = noteTitle, isArchive = archive.toBoolean())
                             notesList.add(notes!!)
-                            searchNoteList.add(noteContent)
-                            searchNoteList.add(noteTitle)
                         }
                         Log.d("NoteService", "${notesList.size.toString()}")
 
@@ -127,7 +105,8 @@ class NoteServices(var dataBaseHelper: DataBaseHelper) {
                         var note = Notes(
                             notes = it.result.getString("Note").toString(),
                             noteId = it.result.getString("NoteID").toString(),
-                            title = it.result.getString("Title").toString()
+                            title = it.result.getString("Title").toString(),
+                            isArchive = it.result.getString("ArchiveStatus").toBoolean()
                         )
                        // dataBaseHelper.getSingleNote(noteId)
                         listener(EditNoteAuthListener(note, true, "success"))
