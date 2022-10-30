@@ -32,13 +32,13 @@ class NoteFragment : Fragment() {
     lateinit var floatingActionButton: FloatingActionButton
     lateinit var notesViewModel: NotesViewModel
     lateinit var noteList: ArrayList<Notes> //
-    lateinit var filteredList : ArrayList<Notes>
-    lateinit var archiveList : ArrayList<Notes>
+    lateinit var filteredList: ArrayList<Notes>
+    lateinit var archiveList: ArrayList<Notes>
     lateinit var recyclerView: RecyclerView
     var bundle = Bundle()
-    var currentViewMode : Int = 0
-    val viewModeListView : Int = 0
-    val viewModeGridView : Int = 1
+    var currentViewMode: Int = 0
+    val viewModeListView: Int = 0
+    val viewModeGridView: Int = 1
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,6 +73,10 @@ class NoteFragment : Fragment() {
                 ?.replace(R.id.home_activity_fragment_container, fragment)?.commit()
         }
 
+        val isArchive = arguments?.get("add_note_to_archive")
+        if (isArchive != null && isArchive == 2) {
+            addingNotesToArchive()
+        }
 //       val isArchive = arguments?.get("add_note_to_archive")
 //       if(isArchive != null && isArchive == 2) {
 //           val noteId = arguments?.getString("noteId")!!.toString()
@@ -88,33 +92,33 @@ class NoteFragment : Fragment() {
         removeNote()
     }
 
-    var OperationToBePerform : Int ?= null
-    fun removeNote(){
-       // var OperationToBePerform : Int ?= null
-        var noteId : String
-        OperationToBePerform  = arguments?.getInt("perform_deletion")
-        if(OperationToBePerform != null && OperationToBePerform == 1){
+    var OperationToBePerform: Int? = null
+    fun removeNote() {
+        // var OperationToBePerform : Int ?= null
+        var noteId: String
+        OperationToBePerform = arguments?.getInt("perform_deletion")
+        if (OperationToBePerform != null && OperationToBePerform == 1) {
             noteId = arguments?.getString("noteId")!!.toString()
             notesViewModel.deleteNote(noteId)
-            notesViewModel.deleteNote.observe(viewLifecycleOwner,Observer{
-                if(it.status){
-                    Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+            notesViewModel.deleteNote.observe(viewLifecycleOwner, Observer {
+                if (it.status) {
+                    Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
                     recyclerView.adapter?.notifyDataSetChanged()
                 }
             })
         }
     }
 
-    fun displayAllNotesInRecyclerView(){
+    fun displayAllNotesInRecyclerView() {
         //var note = Notes()
         notesViewModel.getNotes()
         notesViewModel.readNote.observe(viewLifecycleOwner, Observer {
             if (it.status) {
-                    noteList = it.noteArrayList
-                    filteredList.addAll(noteList)
-                    recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
-                    recyclerView.adapter?.notifyDataSetChanged()
-                    Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
+                noteList = it.noteArrayList
+                filteredList.addAll(noteList)
+                recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
+                recyclerView.adapter?.notifyDataSetChanged()
+                Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -123,11 +127,11 @@ class NoteFragment : Fragment() {
         when (item.itemId) {
             R.id.search_bar -> return true
             R.id.grid_linear_view -> {
-                if(viewModeListView == currentViewMode){
+                if (viewModeListView == currentViewMode) {
                     switchView(item)
-                    recyclerView.layoutManager = GridLayoutManager(requireActivity(),2)
+                    recyclerView.layoutManager = GridLayoutManager(requireActivity(), 2)
                     currentViewMode = viewModeGridView
-                }else{
+                } else {
                     switchView(item)
                     recyclerView.layoutManager = LinearLayoutManager(requireActivity())
                     currentViewMode = viewModeListView
@@ -168,13 +172,16 @@ class NoteFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 filteredList.clear()
                 val searchText = newText!!.toLowerCase(Locale.getDefault())
-                if(searchText.isNotEmpty()){
-                    for(note in noteList){
-                        if(note.notes.toLowerCase(Locale.getDefault()).contains(searchText) || note.title.toLowerCase(Locale.getDefault()).contains(searchText) )
-                        filteredList.add(note)
+                if (searchText.isNotEmpty()) {
+                    for (note in noteList) {
+                        if (note.notes.toLowerCase(Locale.getDefault())
+                                .contains(searchText) || note.title.toLowerCase(Locale.getDefault())
+                                .contains(searchText)
+                        )
+                            filteredList.add(note)
                     }
                     recyclerView.adapter = NoteRecyclerViewAdapter(filteredList)
-                }else{
+                } else {
                     filteredList.clear()
                     filteredList.addAll(noteList)
                     recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
@@ -185,13 +192,41 @@ class NoteFragment : Fragment() {
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
-    fun switchView(menuItem: MenuItem){
-        if(currentViewMode == viewModeGridView){
+    fun switchView(menuItem: MenuItem) {
+        if (currentViewMode == viewModeGridView) {
             menuItem.setIcon(resources.getDrawable(R.drawable.ic_baseline_grid_view_24))
             currentViewMode = viewModeListView
-        }else{
+        } else {
             menuItem.setIcon(resources.getDrawable(R.drawable.ic_baseline_horizontal_split_24))
             currentViewMode = viewModeGridView
         }
+    }
+
+    fun addingNotesToArchive() {
+        val noteId = arguments?.getString("noteId")!!.toString()
+        var note: Notes
+        notesViewModel.readSingleNote(noteId)
+        notesViewModel.readSingleNote.observe(viewLifecycleOwner, Observer {
+            if (it.status) {
+                note = Notes(
+                    notes = it.notes.notes,
+                    noteId = it.notes.noteId,
+                    title = it.notes.title,
+                    isArchive = true
+                )
+
+                notesViewModel.updateSingleNote(note, noteId)
+                notesViewModel.updateSingleNote.observe(viewLifecycleOwner, Observer {
+                    if (it.status) {
+                        // Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+
+                        archiveList.add(note)
+                        Log.d("ArchiveNote", "${archiveList.size}")
+                    }
+                })
+            }
+
+        })
+
     }
 }

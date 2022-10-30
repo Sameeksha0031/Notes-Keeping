@@ -211,7 +211,7 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
                             return true
                         }
                         R.id.archeive -> {
-                            val fragment = ArchiveNoteFragment()
+                            val fragment = NoteFragment()
                             var noteId  : String = notes.noteId
                             bundle.putString("noteId",noteId)
                             bundle.putInt("add_note_to_archive",2)
@@ -223,7 +223,16 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
                                 .commit()
                             //Log.d("Adapter","allNotes - $allNotes")
                             //Log.d("Adapter","allNotes - $archiveNoteList")
-                           Toast.makeText(it.context,"Note add to Archive",Toast.LENGTH_SHORT).show()
+//                           Toast.makeText(it.context,"Note add to Archive",Toast.LENGTH_SHORT).show()
+                            return true
+                        }
+                        R.id.remainders ->{
+                            val dialog = ArchiveNoteFragment()
+                            val transaction = it.context as AppCompatActivity
+                            transaction.supportFragmentManager.beginTransaction()
+                                .replace(R.id.home_activity_fragment_container, dialog)
+                                .addToBackStack(null)
+                                .commit()
                             return true
                         }
                         else -> return false

@@ -26,7 +26,7 @@ class ArchiveNoteFragment : Fragment() {
     lateinit var archiveList : ArrayList<Notes>
     lateinit var noteList: ArrayList<Notes>
     lateinit  var noteId : String
-    var noteFragment = NoteFragment()
+    var note = Notes()
     var currentStateOfNote : Int = 0
     val archiveNote : Int = 0
     val noteIsNotArchive : Int = 1
@@ -48,83 +48,99 @@ class ArchiveNoteFragment : Fragment() {
         notesViewModel = NotesViewModel(NoteServices(DataBaseHelper(requireContext())))
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
-        addingNotesToArchive()
-    }
-
-    fun addingNotesToArchive(){
         val isArchive = arguments?.get("add_note_to_archive")
         if (isArchive != null && isArchive == 2) {
-            val noteId = arguments?.getString("noteId")!!.toString()
-            var note: Notes
-            if(currentStateOfNote == archiveNote) {
-                notesViewModel.readSingleNote(noteId)
-                notesViewModel.readSingleNote.observe(viewLifecycleOwner, Observer {
-                    if (it.status) {
-                        note = Notes(
-                            notes = it.notes.notes,
-                            noteId = it.notes.noteId,
-                            title = it.notes.title,
-                            isArchive = true
-                        )
-
-                        notesViewModel.updateSingleNote(note, noteId)
-                        notesViewModel.updateSingleNote.observe(viewLifecycleOwner, Observer {
-                            if (it.status) {
-                                // Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
-
-                                archiveList.add(note)
-                                Log.d("ArchiveNote","${archiveList}")
-                                //Toast.makeText(context, "Note add to Archive", Toast.LENGTH_SHORT)
-                                    //.show()
-                                currentStateOfNote = noteIsNotArchive
-                                recyclerView.adapter = NoteRecyclerViewAdapter(archiveList)
-//                                notesViewModel.getNotes()
-//                                notesViewModel.readNote.observe(viewLifecycleOwner, Observer {
-//                                    if(it.status){
-//                                        noteList = it.noteArrayList
-//                                        recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
-//                                    }
-//                                })
-                            }
-                        })
-                    }
-                    notesViewModel.getNotes()
-                    notesViewModel.readNote.observe(viewLifecycleOwner, Observer {
-                        if(it.status){
-                            noteList = it.noteArrayList
-                            recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
-                        }
-                    })
-
-                })
-            }
-            if(currentStateOfNote == noteIsNotArchive) {
-                notesViewModel.readSingleNote(noteId)
-                notesViewModel.readSingleNote.observe(viewLifecycleOwner, Observer {
-                    if (it.status) {
-                        note = Notes(
-                            notes = it.notes.notes,
-                            noteId = it.notes.noteId,
-                            title = it.notes.title,
-                            isArchive = false
-                        )
-
-                        notesViewModel.updateSingleNote(note, noteId)
-                        notesViewModel.updateSingleNote.observe(viewLifecycleOwner, Observer {
-                            if (it.status) {
-                                // Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
-                                archiveList.add(note)
-                                Toast.makeText(context, "Note add to Archive", Toast.LENGTH_SHORT)
-                                    .show()
-                                currentStateOfNote = archiveNote
-                                recyclerView.adapter = NoteRecyclerViewAdapter(archiveList)
-                                //displayAllNotesInRecyclerView()
-                            }
-                        })
-                    }
-
-                })
-            }
+            addingNotesToArchive()
         }
     }
+
+    fun addingNotesToArchive() {
+        notesViewModel.getNotes()
+        notesViewModel.readNote.observe(viewLifecycleOwner, Observer {
+            if(it.status){
+                noteList = it.noteArrayList
+                for(notes in noteList){
+                    if(note.isArchive == true){
+                        archiveList.add(notes)
+                        Log.d("ArchiveFragment","note List = $archiveList.size")
+                    }
+                }
+//                recyclerView.adapter = NoteRecyclerViewAdapter(archiveList)
+            }
+        })
+        recyclerView.adapter = NoteRecyclerViewAdapter(archiveList)
+    }
+//        val noteId = arguments?.getString("noteId")!!.toString()
+//        var note: Notes
+//        if(currentStateOfNote == archiveNote) {
+//            notesViewModel.readSingleNote(noteId)
+//            notesViewModel.readSingleNote.observe(viewLifecycleOwner, Observer {
+//                if (it.status) {
+//                    note = Notes(
+//                        notes = it.notes.notes,
+//                            noteId = it.notes.noteId,
+//                            title = it.notes.title,
+//                            isArchive = true
+//                        )
+//
+//                        notesViewModel.updateSingleNote(note, noteId)
+//                        notesViewModel.updateSingleNote.observe(viewLifecycleOwner, Observer {
+//                            if (it.status) {
+//                                // Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+//
+//                                archiveList.add(note)
+//                                Log.d("ArchiveNote","${archiveList.size}")
+//                                //Toast.makeText(context, "Note add to Archive", Toast.LENGTH_SHORT)
+//                                    //.show()
+//                                currentStateOfNote = noteIsNotArchive
+//                                recyclerView.adapter = NoteRecyclerViewAdapter(archiveList)
+////                                notesViewModel.getNotes()
+////                                notesViewModel.readNote.observe(viewLifecycleOwner, Observer {
+////                                    if(it.status){
+////                                        noteList = it.noteArrayList
+////                                        recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
+////                                    }
+////                                })
+//                            }
+//                        })
+//                    }
+//                    notesViewModel.getNotes()
+//                    notesViewModel.readNote.observe(viewLifecycleOwner, Observer {
+//                        if(it.status){
+//                            noteList = it.noteArrayList
+//                            recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
+//                        }
+//                    })
+//
+//                })
+//            }
+//            if(currentStateOfNote == noteIsNotArchive) {
+//                notesViewModel.readSingleNote(noteId)
+//                notesViewModel.readSingleNote.observe(viewLifecycleOwner, Observer {
+//                    if (it.status) {
+//                        note = Notes(
+//                            notes = it.notes.notes,
+//                            noteId = it.notes.noteId,
+//                            title = it.notes.title,
+//                            isArchive = false
+//                        )
+//
+//                        notesViewModel.updateSingleNote(note, noteId)
+//                        notesViewModel.updateSingleNote.observe(viewLifecycleOwner, Observer {
+//                            if (it.status) {
+//                                // Toast.makeText(context,it.msg,Toast.LENGTH_SHORT).show()
+//                                archiveList.add(note)
+//                                Toast.makeText(context, "Note add to Archive", Toast.LENGTH_SHORT)
+//                                    .show()
+//                                currentStateOfNote = archiveNote
+//                                recyclerView.adapter = NoteRecyclerViewAdapter(archiveList)
+//                                //displayAllNotesInRecyclerView()
+//                            }
+//                        })
+//                    }
+//
+//                })
+//            }
+//        }
+//
 }
