@@ -15,7 +15,7 @@
         android:id="@+id/archeive"
         app:showAsAction="always"/>
 
-    <item android:title="Remainder"
+    <item android:title="Reminder"
         android:id="@+id/reminder"
         app:showAsAction="always"/>
 </menu>

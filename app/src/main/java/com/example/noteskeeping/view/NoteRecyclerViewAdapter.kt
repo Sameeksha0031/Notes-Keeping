@@ -1,5 +1,6 @@
 package com.example.noteskeeping.view
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,9 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.constraintlayout.widget.ConstraintLayoutStates.TAG
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.R
 import com.example.noteskeeping.model.Notes
+import com.google.android.gms.common.SupportErrorDialogFragment.newInstance
+import java.lang.reflect.Array.newInstance
+import javax.xml.parsers.DocumentBuilderFactory.newInstance
 
 class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
     RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>(){
@@ -102,11 +109,10 @@ class NoteRecyclerViewAdapter(private var noteList: ArrayList<Notes>) :
 //                           Toast.makeText(it.context,"Note add to Archive",Toast.LENGTH_SHORT).show()
                             return true
                         }
-                        R.id.remainders ->{
-                            val dialog = ArchiveNoteFragment()
+                        R.id.reminder ->{
                             val transaction = it.context as AppCompatActivity
                             transaction.supportFragmentManager.beginTransaction()
-                                .replace(R.id.home_activity_fragment_container, dialog)
+                                .replace(R.id.home_activity_fragment_container, ReminderFragment())
                                 .addToBackStack(null)
                                 .commit()
                             return true

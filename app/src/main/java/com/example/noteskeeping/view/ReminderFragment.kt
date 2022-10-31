@@ -33,7 +33,7 @@ import com.google.android.material.timepicker.TimeFormat
 import de.hdodenhof.circleimageview.CircleImageView
 import java.util.*
 
-class ReminderFragment : DialogFragment() {
+class ReminderFragment : Fragment() {
     lateinit var binding: FragmentReminderBinding
     private lateinit var picker: MaterialTimePicker
     private lateinit var  calendar: Calendar
@@ -45,12 +45,12 @@ class ReminderFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentReminderBinding.inflate(inflater, container, false)
         return inflater.inflate(R.layout.fragment_reminder, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentReminderBinding.bind(view)
         createNotificationChannel()
 
         binding.selectButton.setOnClickListener{
@@ -67,7 +67,7 @@ class ReminderFragment : DialogFragment() {
     }
 
     private fun cancelAlarm() {
-        alarmManager = ALARM_SERVICE as AlarmManager
+        alarmManager = activity?.getSystemService(ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(),AlarmRecevier::class.java)
         pendingIntent = PendingIntent.getBroadcast(requireContext(),0,intent,0)
         alarmManager.cancel(pendingIntent)
@@ -75,7 +75,7 @@ class ReminderFragment : DialogFragment() {
     }
 
     private fun setAlarm() {
-        alarmManager = ALARM_SERVICE as AlarmManager
+        alarmManager = activity?.getSystemService(ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(),AlarmRecevier::class.java)
         pendingIntent = PendingIntent.getBroadcast(requireContext(),0,intent,0)
         alarmManager.setRepeating(
