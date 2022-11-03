@@ -43,7 +43,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_button"
-        android:text="Select Time"
+        android:text="Select Date"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textSize="25sp"

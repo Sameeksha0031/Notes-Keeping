@@ -1,22 +1,18 @@
 package com.example.noteskeeping.view
 
-import android.app.SearchManager
-import android.content.Context
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.R
+import com.example.noteskeeping.api.NoteServicesInterface
+import com.example.noteskeeping.api.RetrofitNoteServices
 import com.example.noteskeeping.database.DataBaseHelper
 import com.example.noteskeeping.databinding.FragmentNoteBinding
 import com.example.noteskeeping.model.NoteServices
@@ -24,6 +20,9 @@ import com.example.noteskeeping.model.Notes
 import com.example.noteskeeping.viewModel.NotesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.hdodenhof.circleimageview.CircleImageView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -35,10 +34,12 @@ class NoteFragment : Fragment() {
     lateinit var filteredList: ArrayList<Notes>
     lateinit var archiveList: ArrayList<Notes>
     lateinit var recyclerView: RecyclerView
+    lateinit var noteRecyclerViewAdapter: NoteRecyclerViewAdapter
     var bundle = Bundle()
     var currentViewMode: Int = 0
     val viewModeListView: Int = 0
     val viewModeGridView: Int = 1
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,7 +64,7 @@ class NoteFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
-        displayAllNotesInRecyclerView()
+        //displayAllNotesInRecyclerView()
 
         floatingActionButton = binding.floatingButton
         floatingActionButton.setOnClickListener {
@@ -77,6 +78,35 @@ class NoteFragment : Fragment() {
         if (isArchive != null && isArchive == 2) {
             addingNotesToArchive()
         }
+
+        val request = RetrofitNoteServices.buildService(NoteServicesInterface::class.java)
+        val retroData = request.getNoteList()
+        retroData.enqueue(object : Callback<ArrayList<Notes>> {
+            override fun onResponse(
+                call: Call<ArrayList<Notes>>,
+                response: Response<ArrayList<Notes>>
+            ) {
+                Log.d("NoteFragment","${response.body().toString()}")
+                if(response.isSuccessful){
+                   // recyclerView.apply {
+                        //setHasFixedSize(true)
+                        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+                        //layoutManager = LinearLayoutManager(context)
+//                        Log.d("NoteFragment","$respo")
+                        recyclerView.adapter = NoteRecyclerViewAdapter(response.body()!!)
+
+                   // }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<Notes>>, t: Throwable) {
+                Log.d("NoteFragment","On Failure")
+            }
+
+        })
+
+
+
 //       val isArchive = arguments?.get("add_note_to_archive")
 //       if(isArchive != null && isArchive == 2) {
 //           val noteId = arguments?.getString("noteId")!!.toString()
@@ -229,4 +259,5 @@ class NoteFragment : Fragment() {
         })
 
     }
+
 }

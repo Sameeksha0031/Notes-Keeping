@@ -8,8 +8,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.view.*
-import android.widget.DatePicker
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
@@ -20,7 +21,6 @@ import com.example.noteskeeping.model.AlarmRecevier
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,6 +44,15 @@ class ReminderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentReminderBinding.bind(view)
+        val dateView: TextView = binding.dateView
+//        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().time)
+//        dateView.text = SimpleDateFormat("dd.MM.yyyy HH.mm.ss").format(System.currentTimeMillis())
+//        dateView.text = date
+//        val timeView: TextView = binding.dateView
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            timeView.text = LocalTime.now().toString()
+//        }
+
         createNotificationChannel()
 
         binding.selectButton.setOnClickListener{

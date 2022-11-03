@@ -1,15 +1,21 @@
 package com.example.noteskeeping.model
 
 import android.util.Log
+import com.example.noteskeeping.api.NoteServicesInterface
 import com.example.noteskeeping.database.DataBaseHelper
 import com.example.noteskeeping.utility.NetworkConnectivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Response
+import retrofit2.http.GET
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class NoteServices(var dataBaseHelper: DataBaseHelper) {
+class NoteServices(var dataBaseHelper: DataBaseHelper){
     private lateinit var auth: FirebaseAuth
     private lateinit var firebaseFireStore: FirebaseFirestore
     private var firebaseStore: FirebaseStorage? = null
