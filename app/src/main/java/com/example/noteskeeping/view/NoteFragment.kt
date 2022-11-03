@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteskeeping.R
 import com.example.noteskeeping.api.NoteServicesInterface
-import com.example.noteskeeping.api.RetrofitNoteServices
+import com.example.noteskeeping.api.RetrofitClient
 import com.example.noteskeeping.database.DataBaseHelper
 import com.example.noteskeeping.databinding.FragmentNoteBinding
 import com.example.noteskeeping.model.NoteServices
@@ -74,38 +74,13 @@ class NoteFragment : Fragment() {
                 ?.replace(R.id.home_activity_fragment_container, fragment)?.commit()
         }
 
+        getNoteUsingRetroFit()
+
+
         val isArchive = arguments?.get("add_note_to_archive")
         if (isArchive != null && isArchive == 2) {
             addingNotesToArchive()
         }
-
-        val request = RetrofitNoteServices.buildService(NoteServicesInterface::class.java)
-        val retroData = request.getNoteList()
-        retroData.enqueue(object : Callback<ArrayList<Notes>> {
-            override fun onResponse(
-                call: Call<ArrayList<Notes>>,
-                response: Response<ArrayList<Notes>>
-            ) {
-                Log.d("NoteFragment","${response.body().toString()}")
-                if(response.isSuccessful){
-                   // recyclerView.apply {
-                        //setHasFixedSize(true)
-                        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-                        //layoutManager = LinearLayoutManager(context)
-//                        Log.d("NoteFragment","$respo")
-                        recyclerView.adapter = NoteRecyclerViewAdapter(response.body()!!)
-
-                   // }
-                }
-            }
-
-            override fun onFailure(call: Call<ArrayList<Notes>>, t: Throwable) {
-                Log.d("NoteFragment","On Failure")
-            }
-
-        })
-
-
 
 //       val isArchive = arguments?.get("add_note_to_archive")
 //       if(isArchive != null && isArchive == 2) {
@@ -257,6 +232,26 @@ class NoteFragment : Fragment() {
             }
 
         })
+
+    }
+
+    fun getNoteUsingRetroFit(){
+        RetrofitClient.getInstance()?.getMyApi()?.getNoteList()
+            ?.enqueue(object : Callback<ArrayList<Notes>>{
+            override fun onResponse(
+                call: Call<ArrayList<Notes>>,
+                response: Response<ArrayList<Notes>>
+            ) {
+               var  noteList : ArrayList<Notes> = response.body()!!
+               Log.d("NoteFragment","note List - ${noteList.size}--- response -${response.body().toString()}")
+            }
+
+            override fun onFailure(call: Call<ArrayList<Notes>>, t: Throwable) {
+                Log.d("NoteFragment","Retrofit Fail")
+            }
+
+        })
+
 
     }
 
