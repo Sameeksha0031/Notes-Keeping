@@ -1,7 +1,6 @@
 package com.example.noteskeeping.model
 
 import android.util.Log
-import com.example.noteskeeping.api.NoteServicesInterface
 import com.example.noteskeeping.database.DataBaseHelper
 import com.example.noteskeeping.utility.NetworkConnectivity
 import com.google.firebase.auth.FirebaseAuth

@@ -26,5 +26,4 @@ object RetrofitClient {
             .baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build().create(NoteServicesInterface::class.java)
         return api
     }
-
 }

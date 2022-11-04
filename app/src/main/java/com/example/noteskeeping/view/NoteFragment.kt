@@ -15,8 +15,7 @@ import com.example.noteskeeping.api.NoteServicesInterface
 import com.example.noteskeeping.api.RetrofitClient
 import com.example.noteskeeping.database.DataBaseHelper
 import com.example.noteskeeping.databinding.FragmentNoteBinding
-import com.example.noteskeeping.model.NoteServices
-import com.example.noteskeeping.model.Notes
+import com.example.noteskeeping.model.*
 import com.example.noteskeeping.viewModel.NotesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.hdodenhof.circleimageview.CircleImageView
@@ -235,24 +234,29 @@ class NoteFragment : Fragment() {
 
     }
 
-    fun getNoteUsingRetroFit(){
+    fun getNoteUsingRetroFit() {
         RetrofitClient.getInstance()?.getMyApi()?.getNoteList()
-            ?.enqueue(object : Callback<ArrayList<Notes>>{
+            ?.enqueue(object : Callback<RetrofitRetriver>{
             override fun onResponse(
-                call: Call<ArrayList<Notes>>,
-                response: Response<ArrayList<Notes>>
+                call: Call<RetrofitRetriver>,
+                response: Response<RetrofitRetriver>
             ) {
-               var  noteList : ArrayList<Notes> = response.body()!!
-               Log.d("NoteFragment","note List - ${noteList.size}--- response -${response.body().toString()}")
+                val jsonList : RetrofitRetriver? = response.body()
+                val noteList : ArrayList<Notes> = arrayListOf()
+                if (jsonList != null) {
+                   jsonList.documents.forEach {
+                          var note = Notes(it.fields.Note.stringValue,it.fields.NoteID.stringValue,it.fields.Title.stringValue)
+                         noteList.add(note)
+                   }
+                    recyclerView.adapter = NoteRecyclerViewAdapter(noteList)
+
+                }
+                Log.d("NoteFragment","response -${response.body().toString()}")
             }
 
-            override fun onFailure(call: Call<ArrayList<Notes>>, t: Throwable) {
-                Log.d("NoteFragment","Retrofit Fail")
+            override fun onFailure(call: Call<RetrofitRetriver>, t: Throwable) {
+                Log.d("NoteFragment","Retrofit Fail- $t")
             }
-
         })
-
-
     }
-
 }
