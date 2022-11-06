@@ -98,9 +98,9 @@ class NoteFragment : Fragment() {
 
         Firebase.messaging.subscribeToTopic("general")
             .addOnCompleteListener { task ->
-                var msg = "Subscribed"
+                var msg = "notification sent successfully"
                 if (!task.isSuccessful) {
-                    msg = "Subscribe failed"
+                    msg = "notification sent fail"
                 }
                 Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
             }

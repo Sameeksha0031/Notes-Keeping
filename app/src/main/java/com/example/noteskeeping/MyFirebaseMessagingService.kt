@@ -1,17 +1,15 @@
-package com.example.noteskeeping.view
+package com.example.noteskeeping
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_ONE_SHOT
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import com.example.noteskeeping.R
+import com.example.noteskeeping.view.HomeActivity
+import com.example.noteskeeping.view.NoteFragment
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -20,10 +18,10 @@ const val channelName = "com.example.noteskeeping.view"
 class MyFirebaseMessagingService : FirebaseMessagingService(){
 
     fun generationNotification(title : String,message : String){
-        val intent = Intent(this,HomeActivity::class.java)
+        val intent = Intent(this, HomeActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
 
-        val pendingIntent = PendingIntent.getActivity(this,0,intent, FLAG_ONE_SHOT)
+        val pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_ONE_SHOT)
         var builder: NotificationCompat.Builder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.google_logo)
             .setAutoCancel(true)
@@ -35,16 +33,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val notificationChannel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
             notificationManager.createNotificationChannel(notificationChannel)
         }
         notificationManager.notify(0,builder.build())
     }
 
-    @SuppressLint("RemoteViewLayout")
     fun getRemoteView(title : String, message : String): RemoteViews? {
-        val remoteView = RemoteViews("com.example.noteskeeping.view",R.layout.push_notification)
+        val remoteView = RemoteViews("com.example.noteskeeping",R.layout.push_notification)
         remoteView.setTextViewText(R.id.notification_title,title)
         remoteView.setTextViewText(R.id.notification_description,message)
         remoteView.setImageViewResource(R.id.app_profile,R.drawable.google_logo)
@@ -54,7 +51,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
     override fun onMessageReceived(message: RemoteMessage) {
 
         if(message.notification != null){
-              generationNotification(message.notification!!.title!!, message.notification!!.body!!)
+            generationNotification(message.notification!!.title!!, message.notification!!.body!!)
         }
     }
 }
