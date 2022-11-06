@@ -1,5 +1,6 @@
 package com.example.noteskeeping.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -18,6 +19,8 @@ import com.example.noteskeeping.databinding.FragmentNoteBinding
 import com.example.noteskeeping.model.*
 import com.example.noteskeeping.viewModel.NotesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
@@ -92,6 +95,16 @@ class NoteFragment : Fragment() {
 //           fragmentManager?.beginTransaction()?.replace(R.id.home_activity_fragment_container,fragment)?.addToBackStack(null)?.commit()
 //       //recyclerView.adapter?.notifyItemRemoved()
 //       }
+
+        Firebase.messaging.subscribeToTopic("general")
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed"
+                if (!task.isSuccessful) {
+                    msg = "Subscribe failed"
+                }
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+            }
+
 
         removeNote()
     }
